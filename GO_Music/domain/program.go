@@ -4,7 +4,7 @@ import (
 	"github.com/SerMoskvin/validate"
 )
 
-// Programm представляет запись музыкальной программы из БД
+// Programm представляет запись музыкальной программы
 type Programm struct {
 	MusprogrammID          int     `json:"musprogramm_id"`
 	ProgrammName           string  `json:"programm_name" validate:"required,min=1,max=100"`

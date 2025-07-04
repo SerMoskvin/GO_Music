@@ -6,7 +6,7 @@ import (
 	"github.com/SerMoskvin/validate"
 )
 
-// Employee представляет запись сотрудника из БД
+// Employee представляет запись сотрудника
 type Employee struct {
 	EmployeeID     int       `json:"employee_id"`
 	UserID         *int      `json:"user_id,omitempty"`
@@ -19,17 +19,14 @@ type Employee struct {
 	WorkExperience int       `json:"work_experience" validate:"required,gte=0"`
 }
 
-// GetID возвращает идентификатор сотрудника
 func (e *Employee) GetID() int {
 	return e.EmployeeID
 }
 
-// SetID устанавливает идентификатор сотрудника
 func (e *Employee) SetID(id int) {
 	e.EmployeeID = id
 }
 
-// Validate запускает валидацию полей сотрудника
 func (e *Employee) Validate() error {
 	return validate.ValidateStruct(e)
 }

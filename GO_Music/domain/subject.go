@@ -4,7 +4,7 @@ import (
 	"github.com/SerMoskvin/validate"
 )
 
-// Subject представляет запись предмета из БД
+// Subject представляет запись предмета
 type Subject struct {
 	SubjectID   int    `json:"subject_id"`
 	SubjectName string `json:"subject_name" validate:"required,min=1,max=60"`
