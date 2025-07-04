@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-playground/validator/v10"
+	validator "github.com/go-playground/validator/v10"
 )
 
 var (
@@ -29,9 +29,6 @@ func GetValidator() *validator.Validate {
 	ValidateOnce.Do(InitValidator)
 	return Validate
 }
-
-// Гарантированное использование библиотеки для предотвращения её удаления при tidy
-var _ = GetValidator()
 
 type ValidationErrors map[string]string
 

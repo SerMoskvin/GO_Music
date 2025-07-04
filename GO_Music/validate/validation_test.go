@@ -2,23 +2,31 @@ package validate
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestValidateStruct(t *testing.T) {
 	for _, tc := range TestCases {
 		t.Run(tc.Name, func(t *testing.T) {
-			err := validate.ValidateStruct(tc.Input)
+			err := ValidateStruct(tc.Input)
 			if tc.WantErr {
-				assert.Error(t, err)
-				validationErrors, ok := err.(validate.ValidationErrors)
-				assert.True(t, ok, "error should be of type ValidationErrors")
-				for field, msg := range tc.ErrMsgs {
-					assert.Equal(t, msg, validationErrors[field])
+				if err == nil {
+					t.Errorf("Expected error but got nil")
+				} else {
+					validationErrors, ok := err.(ValidationErrors)
+					if !ok {
+						t.Errorf("Error should be of type ValidationErrors")
+					} else {
+						for field, msg := range tc.ErrMsgs {
+							if validationErrors[field] != msg {
+								t.Errorf("For field '%s', expected message '%s', but got '%s'", field, msg, validationErrors[field])
+							}
+						}
+					}
 				}
 			} else {
-				assert.NoError(t, err)
+				if err != nil {
+					t.Errorf("Expected no error but got: %v", err)
+				}
 			}
 		})
 	}
