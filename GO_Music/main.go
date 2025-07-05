@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/go-playground/validator/v10"
+	"runtime"
 )
 
 func main() {
-	v := validator.New()
-	fmt.Println("Validator created:", v)
+	cpuCount := runtime.NumCPU()
+	fmt.Println("Количество логических ядер:", cpuCount)
 }
