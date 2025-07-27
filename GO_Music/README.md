@@ -1,6 +1,6 @@
 # Project "*GO_Music*"
 
->[!ALERT]
+>[!WARNING]
 >This is a study project
 
 >[!NOTE]
