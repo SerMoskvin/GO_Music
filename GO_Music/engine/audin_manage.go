@@ -1,58 +1,73 @@
 package engine
 
 import (
-	"GO_Music/domain"
-	"errors"
+	"context"
+	"fmt"
+	"time"
 
-	"github.com/SerMoskvin/validate"
+	"GO_Music/domain"
+
+	"github.com/SerMoskvin/logger"
 )
 
-type AudienceRepository interface {
-	Repository[domain.Audience]
-}
-
+// AudienceManager расширяет BaseManager для аудиторий
 type AudienceManager struct {
-	repo AudienceRepository
+	*BaseManager[domain.Audience, *domain.Audience]
 }
 
-func NewAudienceManager(repo AudienceRepository) *AudienceManager {
-	return &AudienceManager{repo: repo}
+func NewAudienceManager(
+	repo Repository[domain.Audience, *domain.Audience],
+	logger *logger.LevelLogger,
+	txTimeout time.Duration,
+) *AudienceManager {
+	return &AudienceManager{
+		BaseManager: NewBaseManager[domain.Audience](repo, logger, txTimeout),
+	}
 }
 
-func (m *AudienceManager) Create(audience *domain.Audience) error {
-	if err := validate.ValidateStruct(audience); err != nil {
-		return err
+// GetByNumber возвращает аудиторию по номеру
+func (m *AudienceManager) GetByNumber(ctx context.Context, number string) (*domain.Audience, error) {
+	audiences, err := m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "audin_number", Operator: "=", Value: number},
+		},
+		Limit: 1,
+	})
+	if err != nil {
+		m.logger.Error("GetByNumber failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "number", Value: number},
+		)
+		return nil, fmt.Errorf("get by number failed: %w", err)
 	}
-	return m.repo.Create(audience)
+
+	if len(audiences) == 0 {
+		return nil, nil
+	}
+	return audiences[0], nil
 }
 
-func (m *AudienceManager) Update(audience *domain.Audience) error {
-	if audience.AudienceID == 0 {
-		return errors.New("не указан ID аудитории")
-	}
-	if err := validate.ValidateStruct(audience); err != nil {
-		return err
-	}
-	return m.repo.Update(audience)
+// ListByCapacity возвращает аудитории с вместимостью >= minCapacity
+func (m *AudienceManager) ListByCapacity(ctx context.Context, minCapacity int) ([]*domain.Audience, error) {
+	return m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "capacity", Operator: ">=", Value: minCapacity},
+		},
+		OrderBy: "capacity DESC",
+	})
 }
 
-func (m *AudienceManager) Delete(id int) error {
-	if id == 0 {
-		return errors.New("не указан ID аудитории")
+// CheckNumberUnique проверяет уникальность номера аудитории
+func (m *AudienceManager) CheckNumberUnique(ctx context.Context, number string, excludeID int) (bool, error) {
+	audiences, err := m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "audin_number", Operator: "=", Value: number},
+			{Field: "audience_id", Operator: "!=", Value: excludeID},
+		},
+		Limit: 1,
+	})
+	if err != nil {
+		return false, err
 	}
-	return m.repo.Delete(id)
-}
-
-func (m *AudienceManager) GetByID(id int) (*domain.Audience, error) {
-	if id == 0 {
-		return nil, errors.New("не указан ID аудитории")
-	}
-	return m.repo.GetByID(id)
-}
-
-func (m *AudienceManager) GetByIDs(ids []int) ([]*domain.Audience, error) {
-	if len(ids) == 0 {
-		return nil, errors.New("список ID пуст")
-	}
-	return m.repo.GetByIDs(ids)
+	return len(audiences) == 0, nil
 }

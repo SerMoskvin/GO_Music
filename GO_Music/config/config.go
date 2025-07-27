@@ -19,10 +19,6 @@ type Config struct {
 		DBName   string `yaml:"dbname"`
 		SSLMode  string `yaml:"sslmode"`
 	} `yaml:"database"`
-
-	Auth struct {
-		JWTSecret string `yaml:"jwt_secret"`
-	} `yaml:"auth"`
 }
 
 func LoadConfig(path string) (*Config, error) {

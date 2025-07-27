@@ -1,11 +1,13 @@
 package main
 
 import (
-	"fmt"
-	"runtime"
+	"log"
+
+	"GO_Music/app"
 )
 
 func main() {
-	cpuCount := runtime.NumCPU()
-	fmt.Println("Количество логических ядер:", cpuCount)
+	if err := app.Run(":8080"); err != nil {
+		log.Fatal(err)
+	}
 }

@@ -1,80 +1,91 @@
 package engine
 
 import (
-	"GO_Music/domain"
-	"errors"
+	"context"
 	"fmt"
+
+	"GO_Music/domain"
+
+	"github.com/SerMoskvin/logger"
 )
 
-type SubjectDistributionRepository interface {
-	Create(sd *domain.SubjectDistribution) error
-	Update(sd *domain.SubjectDistribution) error
-	Delete(id int) error
-	GetByID(id int) (*domain.SubjectDistribution, error)
-	ExistsByEmployeeAndSubject(employeeID, subjectID int) (bool, error)
-}
-
-// Менеджер бизнес-логики для SubjectDistribution
 type SubjectDistributionManager struct {
-	repo SubjectDistributionRepository
+	*BaseManager[domain.SubjectDistribution, *domain.SubjectDistribution]
 }
 
-func NewSubjectDistributionManager(repo SubjectDistributionRepository) *SubjectDistributionManager {
-	return &SubjectDistributionManager{repo: repo}
+func NewSubjectDistributionManager(
+	repo Repository[domain.SubjectDistribution, *domain.SubjectDistribution],
+	logger *logger.LevelLogger,
+) *SubjectDistributionManager {
+	return &SubjectDistributionManager{
+		BaseManager: &BaseManager[domain.SubjectDistribution, *domain.SubjectDistribution]{
+			repo:   repo,
+			logger: logger,
+		},
+	}
 }
 
-func (m *SubjectDistributionManager) Create(sd *domain.SubjectDistribution) error {
-	if sd == nil {
-		return errors.New("subject distribution is nil")
-	}
-	if err := sd.Validate(); err != nil {
-		return fmt.Errorf("validation failed: %w", err)
-	}
-
-	exists, err := m.repo.ExistsByEmployeeAndSubject(sd.EmployeeID, sd.SubjectID)
+func (m *SubjectDistributionManager) GetByEmployeeAndSubject(
+	ctx context.Context,
+	employeeID int,
+	subjectID int,
+) (*domain.SubjectDistribution, error) {
+	distributions, err := m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "employee_id", Operator: "=", Value: employeeID},
+			{Field: "subject_id", Operator: "=", Value: subjectID},
+		},
+		Limit: 1,
+	})
 	if err != nil {
-		return fmt.Errorf("failed to check existence: %w", err)
-	}
-	if exists {
-		return errors.New("this employee already has the specified subject assigned")
+		m.logger.Error("GetByEmployeeAndSubject failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "employee_id", Value: employeeID},
+			logger.Field{Key: "subject_id", Value: subjectID},
+		)
+		return nil, fmt.Errorf("failed to get distribution: %w", err)
 	}
 
-	return m.repo.Create(sd)
+	if len(distributions) == 0 {
+		return nil, nil
+	}
+	return distributions[0], nil
 }
 
-func (m *SubjectDistributionManager) Update(sd *domain.SubjectDistribution) error {
-	if sd == nil {
-		return errors.New("subject distribution is nil")
-	}
-	if sd.SubjectDistrID == 0 {
-		return errors.New("invalid subject_distr_id")
-	}
-	if err := sd.Validate(); err != nil {
-		return fmt.Errorf("validation failed: %w", err)
-	}
-
-	existing, err := m.repo.GetByID(sd.SubjectDistrID)
+func (m *SubjectDistributionManager) GetByEmployee(
+	ctx context.Context,
+	employeeID int,
+) ([]*domain.SubjectDistribution, error) {
+	distributions, err := m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "employee_id", Operator: "=", Value: employeeID},
+		},
+	})
 	if err != nil {
-		return fmt.Errorf("failed to get existing record: %w", err)
+		m.logger.Error("GetByEmployee failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "employee_id", Value: employeeID},
+		)
+		return nil, fmt.Errorf("failed to get distributions: %w", err)
 	}
-	if existing == nil {
-		return errors.New("subject distribution not found")
-	}
-
-	exists, err := m.repo.ExistsByEmployeeAndSubject(sd.EmployeeID, sd.SubjectID)
-	if err != nil {
-		return fmt.Errorf("failed to check existence: %w", err)
-	}
-	if exists && !(existing.EmployeeID == sd.EmployeeID && existing.SubjectID == sd.SubjectID) {
-		return errors.New("this employee already has the specified subject assigned")
-	}
-
-	return m.repo.Update(sd)
+	return distributions, nil
 }
 
-func (m *SubjectDistributionManager) Delete(id int) error {
-	if id == 0 {
-		return errors.New("invalid id")
+func (m *SubjectDistributionManager) GetBySubject(
+	ctx context.Context,
+	subjectID int,
+) ([]*domain.SubjectDistribution, error) {
+	distributions, err := m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "subject_id", Operator: "=", Value: subjectID},
+		},
+	})
+	if err != nil {
+		m.logger.Error("GetBySubject failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "subject_id", Value: subjectID},
+		)
+		return nil, fmt.Errorf("failed to get distributions: %w", err)
 	}
-	return m.repo.Delete(id)
+	return distributions, nil
 }

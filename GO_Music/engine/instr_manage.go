@@ -1,64 +1,117 @@
 package engine
 
 import (
-	"GO_Music/domain"
-	"errors"
+	"context"
+	"fmt"
+	"time"
 
-	"github.com/SerMoskvin/validate"
+	"GO_Music/domain"
+
+	"github.com/SerMoskvin/logger"
 )
 
-type InstrumentRepository interface {
-	Repository[domain.Instrument]
-}
-
+// InstrumentManager реализует бизнес-логику для музыкальных инструментов
 type InstrumentManager struct {
-	repo InstrumentRepository
+	*BaseManager[domain.Instrument, *domain.Instrument]
 }
 
-func NewInstrumentManager(repo InstrumentRepository) *InstrumentManager {
-	return &InstrumentManager{repo: repo}
+func NewInstrumentManager(
+	repo Repository[domain.Instrument, *domain.Instrument],
+	logger *logger.LevelLogger,
+	txTimeout time.Duration,
+) *InstrumentManager {
+	return &InstrumentManager{
+		BaseManager: NewBaseManager[domain.Instrument](repo, logger, txTimeout),
+	}
 }
 
-func (m *InstrumentManager) Create(instr *domain.Instrument) error {
-	if instr == nil {
-		return errors.New("инструмент не указан")
+// GetByAudience возвращает инструменты в указанной аудитории
+func (m *InstrumentManager) GetByAudience(ctx context.Context, audienceID int) ([]*domain.Instrument, error) {
+	instruments, err := m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "audience_id", Operator: "=", Value: audienceID},
+		},
+		OrderBy: "name",
+	})
+	if err != nil {
+		m.logger.Error("GetByAudience failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "audience_id", Value: audienceID},
+		)
+		return nil, fmt.Errorf("failed to get instruments by audience: %w", err)
 	}
-	if err := validate.ValidateStruct(instr); err != nil {
-		return err
-	}
-	return m.repo.Create(instr)
+	return instruments, nil
 }
 
-func (m *InstrumentManager) Update(instr *domain.Instrument) error {
-	if instr == nil {
-		return errors.New("инструмент не указан")
+// GetByType возвращает инструменты указанного типа
+func (m *InstrumentManager) GetByType(ctx context.Context, instrType string) ([]*domain.Instrument, error) {
+	instruments, err := m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "instr_type", Operator: "=", Value: instrType},
+		},
+		OrderBy: "name",
+	})
+	if err != nil {
+		m.logger.Error("GetByType failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "type", Value: instrType},
+		)
+		return nil, fmt.Errorf("failed to get instruments by type: %w", err)
 	}
-	if instr.InstrumentID == 0 {
-		return errors.New("не указан ID инструмента")
-	}
-	if err := validate.ValidateStruct(instr); err != nil {
-		return err
-	}
-	return m.repo.Update(instr)
+	return instruments, nil
 }
 
-func (m *InstrumentManager) Delete(id int) error {
-	if id == 0 {
-		return errors.New("не указан ID инструмента")
+// GetByName возвращает инструмент по точному названию
+func (m *InstrumentManager) GetByName(ctx context.Context, name string) (*domain.Instrument, error) {
+	instruments, err := m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "name", Operator: "=", Value: name},
+		},
+		Limit: 1,
+	})
+	if err != nil {
+		m.logger.Error("GetByName failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "name", Value: name},
+		)
+		return nil, fmt.Errorf("failed to get instrument by name: %w", err)
 	}
-	return m.repo.Delete(id)
+
+	if len(instruments) == 0 {
+		return nil, nil
+	}
+	return instruments[0], nil
 }
 
-func (m *InstrumentManager) GetByID(id int) (*domain.Instrument, error) {
-	if id == 0 {
-		return nil, errors.New("не указан ID инструмента")
+// CheckNameUnique проверяет уникальность названия инструмента
+func (m *InstrumentManager) CheckNameUnique(ctx context.Context, name string, excludeID int) (bool, error) {
+	instruments, err := m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "name", Operator: "=", Value: name},
+			{Field: "instrument_id", Operator: "!=", Value: excludeID},
+		},
+		Limit: 1,
+	})
+	if err != nil {
+		m.logger.Error("CheckNameUnique failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "name", Value: name},
+		)
+		return false, fmt.Errorf("failed to check name uniqueness: %w", err)
 	}
-	return m.repo.GetByID(id)
+	return len(instruments) == 0, nil
 }
 
-func (m *InstrumentManager) GetByIDs(ids []int) ([]*domain.Instrument, error) {
-	if len(ids) == 0 {
-		return nil, errors.New("список ID пуст")
+// UpdateCondition обновляет состояние инструмента
+func (m *InstrumentManager) UpdateCondition(ctx context.Context, instrumentID int, newCondition string) error {
+	instrument, err := m.GetByID(ctx, instrumentID)
+	if err != nil {
+		return fmt.Errorf("failed to get instrument: %w", err)
 	}
-	return m.repo.GetByIDs(ids)
+	if instrument == nil {
+		return fmt.Errorf("instrument not found")
+	}
+
+	instrument.Condition = newCondition
+	return m.Update(ctx, instrument)
 }

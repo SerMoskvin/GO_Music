@@ -3,74 +3,44 @@ package engine
 import (
 	"GO_Music/domain"
 	"errors"
+
+	"github.com/SerMoskvin/access"
 )
 
+
+
 type StudentRepository interface {
-	Repository[domain.Student]
+	Repository[domain.Student, *domain.Student]
+	GetByTeacherID(teacherID int) ([]*domain.Student, error)
 }
 
 type StudentManager struct {
-	repo      StudentRepository
-	groupRepo StudyGroupRepository
+	*BaseManager[domain.Student, *domain.Student]
+	groupRepo   StudyGroupRepository
+	permissions map[string]access.RolePermissions
 }
 
-func NewStudentManager(repo StudentRepository, groupRepo StudyGroupRepository) *StudentManager {
+func NewStudentManager(
+	repo StudentRepository,
+	groupRepo StudyGroupRepository,
+	permissions map[string]access.RolePermissions,
+) *StudentManager {
 	return &StudentManager{
-		repo:      repo,
-		groupRepo: groupRepo,
+		BaseManager: NewBaseManager[domain.Student, *domain.Student](repo),
+		groupRepo:   groupRepo,
+		permissions: permissions,
 	}
 }
 
-func (m *StudentManager) Create(student *domain.Student) error {
-	if err := student.Validate(); err != nil {
-		return err
+func (m *StudentManager) GetByIDWithAccess(id int, userID int, userRole string) (*domain.Student, error) {
+	rolePerms, ok := m.permissions[userRole] // Используем поле
+	if !ok {
+		return nil, errors.New("неизвестная роль")
 	}
-	return m.repo.Create(student)
-}
 
-func (m *StudentManager) Update(student *domain.Student) error {
-	if student.StudentID == 0 {
-		return errors.New("не указан ID студента")
+	if rolePerms.OwnRecordsOnly && id != userID {
+		return nil, errors.New("доступ запрещён")
 	}
-	if err := student.Validate(); err != nil {
-		return err
-	}
-	return m.repo.Update(student)
-}
 
-func (m *StudentManager) Delete(id int) error {
-	if id == 0 {
-		return errors.New("не указан ID студента")
-	}
-	return m.repo.Delete(id)
-}
-
-func (m *StudentManager) GetByID(id int) (*domain.Student, error) {
-	if id == 0 {
-		return nil, errors.New("не указан ID студента")
-	}
-	return m.repo.GetByID(id)
-}
-
-func (m *StudentManager) GetByIDs(ids []int) ([]*domain.Student, error) {
-	if len(ids) == 0 {
-		return nil, errors.New("список ID пуст")
-	}
-	return m.repo.GetByIDs(ids)
-}
-
-func (m *StudentManager) GetEducationalProgramByGroup(groupID int) (int, error) {
-	group, err := m.groupRepo.GetByID(groupID)
-	if err != nil {
-		return 0, err
-	}
-	return group.MusProgrammID, nil
-}
-
-func (m *StudentManager) GetMusicalSpecialtyByStudent(studentID int) (int, error) {
-	student, err := m.repo.GetByID(studentID)
-	if err != nil {
-		return 0, err
-	}
-	return student.MusprogrammID, nil
+	return m.GetByID(id)
 }

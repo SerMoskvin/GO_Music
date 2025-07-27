@@ -1,64 +1,110 @@
 package engine
 
 import (
-	"GO_Music/domain"
-	"errors"
+	"context"
+	"fmt"
+	"time"
 
-	"github.com/SerMoskvin/validate"
+	"GO_Music/domain"
+
+	"github.com/SerMoskvin/logger"
 )
 
-type EmployeeRepository interface {
-	Repository[domain.Employee]
-}
-
+// EmployeeManager реализует бизнес-логику для сотрудников
 type EmployeeManager struct {
-	repo EmployeeRepository
+	*BaseManager[domain.Employee, *domain.Employee]
 }
 
-func NewEmployeeManager(repo EmployeeRepository) *EmployeeManager {
-	return &EmployeeManager{repo: repo}
+func NewEmployeeManager(
+	repo Repository[domain.Employee, *domain.Employee],
+	logger *logger.LevelLogger,
+	txTimeout time.Duration,
+) *EmployeeManager {
+	return &EmployeeManager{
+		BaseManager: NewBaseManager[domain.Employee](repo, logger, txTimeout),
+	}
 }
 
-func (m *EmployeeManager) Create(employee *domain.Employee) error {
-	if employee == nil {
-		return errors.New("employee is nil")
+// GetByPhone возвращает сотрудника по номеру телефона
+func (m *EmployeeManager) GetByPhone(ctx context.Context, phone string) (*domain.Employee, error) {
+	employees, err := m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "phone_number", Operator: "=", Value: phone},
+		},
+		Limit: 1,
+	})
+	if err != nil {
+		m.logger.Error("GetByPhone failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "phone", Value: phone},
+		)
+		return nil, fmt.Errorf("failed to get employee by phone: %w", err)
 	}
-	if err := validate.ValidateStruct(employee); err != nil {
-		return err
+
+	if len(employees) == 0 {
+		return nil, nil
 	}
-	return m.repo.Create(employee)
+	return employees[0], nil
 }
 
-func (m *EmployeeManager) Update(employee *domain.Employee) error {
-	if employee == nil {
-		return errors.New("employee is nil")
+// GetByUserID возвращает сотрудника по ID пользователя
+func (m *EmployeeManager) GetByUserID(ctx context.Context, userID int) (*domain.Employee, error) {
+	employees, err := m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "user_id", Operator: "=", Value: userID},
+		},
+		Limit: 1,
+	})
+	if err != nil {
+		m.logger.Error("GetByUserID failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "user_id", Value: userID},
+		)
+		return nil, fmt.Errorf("failed to get employee by user ID: %w", err)
 	}
-	if employee.EmployeeID == 0 {
-		return errors.New("не указан ID сотрудника")
+
+	if len(employees) == 0 {
+		return nil, nil
 	}
-	if err := validate.ValidateStruct(employee); err != nil {
-		return err
-	}
-	return m.repo.Update(employee)
+	return employees[0], nil
 }
 
-func (m *EmployeeManager) Delete(id int) error {
-	if id == 0 {
-		return errors.New("не указан ID сотрудника")
-	}
-	return m.repo.Delete(id)
+// ListByExperience возвращает сотрудников с опытом работы не менее указанного
+func (m *EmployeeManager) ListByExperience(ctx context.Context, minExperience int) ([]*domain.Employee, error) {
+	return m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "work_experience", Operator: ">=", Value: minExperience},
+		},
+		OrderBy: "work_experience DESC",
+	})
 }
 
-func (m *EmployeeManager) GetByID(id int) (*domain.Employee, error) {
-	if id == 0 {
-		return nil, errors.New("не указан ID сотрудника")
-	}
-	return m.repo.GetByID(id)
+// ListByBirthdayRange возвращает сотрудников с днями рождения в указанном диапазоне
+func (m *EmployeeManager) ListByBirthdayRange(ctx context.Context, from, to time.Time) ([]*domain.Employee, error) {
+	return m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "birthday", Operator: ">=", Value: from},
+			{Field: "birthday", Operator: "<=", Value: to},
+		},
+		OrderBy: "birthday",
+	})
 }
 
-func (m *EmployeeManager) GetByIDs(ids []int) ([]*domain.Employee, error) {
-	if len(ids) == 0 {
-		return nil, errors.New("список ID пуст")
+// CheckPhoneUnique проверяет уникальность номера телефона
+func (m *EmployeeManager) CheckPhoneUnique(ctx context.Context, phone string, excludeID int) (bool, error) {
+	employees, err := m.List(ctx, Filter{
+		Conditions: []Condition{
+			{Field: "phone_number", Operator: "=", Value: phone},
+			{Field: "employee_id", Operator: "!=", Value: excludeID},
+		},
+		Limit: 1,
+	})
+	if err != nil {
+		m.logger.Error("CheckPhoneUnique failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "phone", Value: phone},
+		)
+		return false, fmt.Errorf("failed to check phone uniqueness: %w", err)
 	}
-	return m.repo.GetByIDs(ids)
+	return len(employees) == 0, nil
 }
