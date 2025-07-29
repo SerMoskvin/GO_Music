@@ -1,11 +1,15 @@
 github.com/SerMoskvin/access v1.1.1 h1:30ba/odSkapk3OQuvSk9zdkEMnQi28iw2wY7WeWDly4=
 github.com/SerMoskvin/access v1.1.1/go.mod h1:QkTGJhGcpj6zUU9GdtWryiFVqV95IVrIsJSpf6YklK8=
+github.com/SerMoskvin/access v1.1.2 h1:m/U5uHx527aV635hUr4cPdU/Ka+tACLli4IrBl6a3bA=
+github.com/SerMoskvin/access v1.1.2/go.mod h1:QkTGJhGcpj6zUU9GdtWryiFVqV95IVrIsJSpf6YklK8=
 github.com/SerMoskvin/logger v1.0.3 h1:NO7oPRy43nti3Uz8wpvTPsKFZ/YTcgeBsMZRrr2hySo=
 github.com/SerMoskvin/logger v1.0.3/go.mod h1:3VXBUx4BS3QQz7g6SvuyQm3iBY9CYW4AR9TGls7pi1o=
 github.com/SerMoskvin/validate v1.0.1 h1:e01ynS0NI50gWVsvqeHQEuO4cnxw4nHPrNiXnMDCtUY=
 github.com/SerMoskvin/validate v1.0.1/go.mod h1:xnIKnJ4IJIUl71yTX18GM80AGQb8l9LLSlhTCuF/iIs=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
+github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/gabriel-vasile/mimetype v1.4.9 h1:5k+WDwEsD9eTLL8Tz3L0VnmVh9QxGjRmjBvAG7U/oYY=
 github.com/gabriel-vasile/mimetype v1.4.9/go.mod h1:WnSQhFKJuBlRyLiKohA/2DtIlPFAbguNaG7QCHcyGok=
 github.com/go-chi/chi/v5 v5.2.2 h1:CMwsvRVTbXVytCk1Wd72Zy1LAsAh9GxMmSNWLHCG618=

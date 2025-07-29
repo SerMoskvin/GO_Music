@@ -8,7 +8,11 @@ require (
 )
 
 require (
+	github.com/SerMoskvin/access v1.1.2
 	github.com/SerMoskvin/logger v1.0.3
+	github.com/SerMoskvin/validate v1.0.1
+	github.com/gorilla/mux v1.8.1
+	github.com/gorilla/sessions v1.4.0
 	go.uber.org/zap v1.27.0 // indirect
 )
 
@@ -21,13 +25,10 @@ require (
 )
 
 require (
-	github.com/SerMoskvin/access v1.1.1
-	github.com/SerMoskvin/validate v1.0.1
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gabriel-vasile/mimetype v1.4.9 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/gorilla/mux v1.8.1
-	github.com/gorilla/sessions v1.4.0
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/lib/pq v1.10.9
 	golang.org/x/crypto v0.39.0 // indirect
