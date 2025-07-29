@@ -4,6 +4,7 @@
 ![Version](https://img.shields.io/github/v/tag/SerMoskvin/GO_Music)
 ![GitHub last commit](https://img.shields.io/github/last-commit/SerMoskvin/GO_Music)
 ![Dependabot](https://badgen.net/github/dependabot/SerMoskvin/GO_Music)
+[![Coverage Status](https://coveralls.io/repos/github/SerMoskvin/GO_Music/badge.svg?branch=main)](https://coveralls.io/github/SerMoskvin/GO_Music?branch=main)
 >[!WARNING]
 >This is a study project
 
