@@ -15,6 +15,7 @@ type User struct {
 	Surname          string    `json:"surname" validate:"required,min=1,max=100"`
 	Name             string    `json:"name" validate:"required,min=1,max=100"`
 	RegistrationDate time.Time `json:"registration_date" validate:"required"`
+	Email            string    `json:"email" validate:"required,email"`
 	Image            []byte    `json:"image,omitempty"`
 }
 
