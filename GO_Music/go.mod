@@ -1,6 +1,6 @@
 module GO_Music
 
-go 1.24.5
+go 1.24
 
 require (
 	github.com/go-playground/validator/v10 v10.27.0 // indirect
