@@ -10,3 +10,28 @@
 
 >[!NOTE]
 >This project use selfmade packages: access, logger and validate 
+
+## Description
+
+"*GO_Music*" is a study project that has a loooooooong story...
+
+### Progress
+
+- [x] ~~Silly README file~~
+- [x] .github folder with dependabot and coverage yml;
+- [x] (1) Domain layer - 🔖0.1.0;
+- [ ] (2) Repo layer - ;
+- [ ] (3) Engine layer - ;
+- [ ] (4) API layer (DTO&Handlers) - ;
+- [ ] File with endpoints ("*router*") - ;
+- [ ] WEB-pages - ;
+- [ ] Configuration files - ;
+- [ ] Proper main.go (launch of project) - ;
+- [ ] Graceful shutdown - ;
+- [ ] Tests:
+    - [ ] Tests for layers;
+    - [ ] Tests for router;
+    - [ ] Benchmark tests;
+- [ ] Docker - ;
+- [ ] SQL Migration - ;
+- [ ] Documentation update - .
