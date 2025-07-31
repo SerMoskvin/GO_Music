@@ -1,6 +1,7 @@
 # Project "**GO_Music**"
 
-[![Go Version](https://img.shields.io/badge/Go-1.24.5+-blue.svg)](https://golang.org/doc/install)
+[![Go Version](https://img.shields.io/badge/Go-1.24+-blue.svg)](https://golang.org/doc/install)
+![progress](https://img.shields.io/badge/progress-10%25-brightgreen)
 ![Version](https://img.shields.io/github/v/tag/SerMoskvin/GO_Music)
 ![GitHub last commit](https://img.shields.io/github/last-commit/SerMoskvin/GO_Music)
 ![Dependabot](https://badgen.net/github/dependabot/SerMoskvin/GO_Music)
@@ -17,9 +18,9 @@
 
 ### Progress
 
-- [x] ~~Silly README file~~
-- [x] .github folder with dependabot and coverage yml;
-- [x] (1) Domain layer - 🔖0.1.0;
+- ✅ ~~Silly README file~~
+- ✅ .github folder with dependabot and coverage yml;
+- ✅ (1) Domain layer - 🔖0.1.0;
 - [ ] (2) Repo layer - ;
 - [ ] (3) Engine layer - ;
 - [ ] (4) API layer (DTO&Handlers) - ;
