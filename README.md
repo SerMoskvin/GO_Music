@@ -15,12 +15,12 @@
 
 "*GO_Music*" is a study project that has a loooooooong story...
 
-## Progression list
 ![progress](https://img.shields.io/badge/progress-10%25-brightgreen)
- 
-✅ ~~Silly README file~~
-✅ .github folder with dependabot and coverage yml;
-✅ (1) Domain layer - 🔖0.1.0;
+## Progression list
+
+✅ ~~Silly README file~~    
+✅ .github folder with dependabot and coverage yml;    
+✅ (1) Domain layer - 🔖0.1.0;  
 - [ ] (2) Repo layer - ;
 - [ ] (3) Engine layer - ;
 - [ ] (4) API layer (DTO&Handlers) - ;
