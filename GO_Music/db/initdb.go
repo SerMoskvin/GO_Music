@@ -9,7 +9,7 @@ import (
 )
 
 // InitPostgresDB инициализирует подключение к базе данных PostgreSQL
-func InitPostgresDB(cfg *config.Config) (*sql.DB, error) {
+func InitPostgresDB(cfg *config.DBConfig) (*sql.DB, error) {
 	// Используем параметры из cfg.Database
 	dsn := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",

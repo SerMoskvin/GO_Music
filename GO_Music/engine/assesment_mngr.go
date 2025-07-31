@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"GO_Music/db"
 	"GO_Music/domain"
 
 	"github.com/SerMoskvin/logger"
@@ -12,23 +13,23 @@ import (
 
 // StudentAssessmentManager реализует бизнес-логику для оценок студентов
 type StudentAssessmentManager struct {
-	*BaseManager[domain.StudentAssessment, *domain.StudentAssessment]
+	*BaseManager[int, *domain.StudentAssessment]
 }
 
 func NewStudentAssessmentManager(
-	repo Repository[domain.StudentAssessment, *domain.StudentAssessment],
+	repo db.Repository[*domain.StudentAssessment, int],
 	logger *logger.LevelLogger,
 	txTimeout time.Duration,
 ) *StudentAssessmentManager {
 	return &StudentAssessmentManager{
-		BaseManager: NewBaseManager[domain.StudentAssessment](repo, logger, txTimeout),
+		BaseManager: NewBaseManager[int, *domain.StudentAssessment](repo, logger, txTimeout),
 	}
 }
 
 // GetByStudent возвращает все оценки студента
 func (m *StudentAssessmentManager) GetByStudent(ctx context.Context, studentID int) ([]*domain.StudentAssessment, error) {
-	assessments, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	assessments, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "student_id", Operator: "=", Value: studentID},
 		},
 		OrderBy: "assessment_date DESC",

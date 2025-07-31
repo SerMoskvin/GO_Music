@@ -6,7 +6,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Config struct {
+type DBConfig struct {
 	Server struct {
 		Port int `yaml:"port"`
 	} `yaml:"server"`
@@ -21,13 +21,13 @@ type Config struct {
 	} `yaml:"database"`
 }
 
-func LoadConfig(path string) (*Config, error) {
+func LoadDBConfig(path string) (*DBConfig, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
 
-	var cfg Config
+	var cfg DBConfig
 	err = yaml.Unmarshal(data, &cfg)
 	if err != nil {
 		return nil, err
