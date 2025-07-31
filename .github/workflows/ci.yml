@@ -1,10 +1,8 @@
 name: Go CI with Coveralls
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  release:
+    types: [created]
 
 jobs:
   test:
