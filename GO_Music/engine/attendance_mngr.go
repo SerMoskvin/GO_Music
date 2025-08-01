@@ -2,9 +2,11 @@ package engine
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
+	"GO_Music/db"
 	"GO_Music/domain"
 
 	"github.com/SerMoskvin/logger"
@@ -12,23 +14,26 @@ import (
 
 // StudentAttendanceManager реализует бизнес-логику для посещаемости студентов
 type StudentAttendanceManager struct {
-	*BaseManager[domain.StudentAttendance, *domain.StudentAttendance]
+	*BaseManager[int, *domain.StudentAttendance]
+	db *sql.DB
 }
 
 func NewStudentAttendanceManager(
-	repo Repository[domain.StudentAttendance, *domain.StudentAttendance],
+	repo db.Repository[*domain.StudentAttendance, int],
+	db *sql.DB,
 	logger *logger.LevelLogger,
 	txTimeout time.Duration,
 ) *StudentAttendanceManager {
 	return &StudentAttendanceManager{
-		BaseManager: NewBaseManager[domain.StudentAttendance](repo, logger, txTimeout),
+		BaseManager: NewBaseManager[int, *domain.StudentAttendance](repo, logger, txTimeout),
+		db:          db,
 	}
 }
 
 // GetByStudent возвращает записи посещаемости для конкретного студента
 func (m *StudentAttendanceManager) GetByStudent(ctx context.Context, studentID int) ([]*domain.StudentAttendance, error) {
-	records, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	records, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "student_id", Operator: "=", Value: studentID},
 		},
 		OrderBy: "attendance_date DESC",
@@ -40,13 +45,13 @@ func (m *StudentAttendanceManager) GetByStudent(ctx context.Context, studentID i
 		)
 		return nil, fmt.Errorf("failed to get attendance by student: %w", err)
 	}
-	return records, nil
+	return DereferenceSlice(records), nil
 }
 
 // GetByLesson возвращает записи посещаемости для конкретного занятия
 func (m *StudentAttendanceManager) GetByLesson(ctx context.Context, lessonID int) ([]*domain.StudentAttendance, error) {
-	records, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	records, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "lesson_id", Operator: "=", Value: lessonID},
 		},
 		OrderBy: "student_id",
@@ -58,13 +63,13 @@ func (m *StudentAttendanceManager) GetByLesson(ctx context.Context, lessonID int
 		)
 		return nil, fmt.Errorf("failed to get attendance by lesson: %w", err)
 	}
-	return records, nil
+	return DereferenceSlice(records), nil
 }
 
 // GetByDateRange возвращает записи за указанный период
 func (m *StudentAttendanceManager) GetByDateRange(ctx context.Context, startDate, endDate string) ([]*domain.StudentAttendance, error) {
-	records, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	records, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "attendance_date", Operator: ">=", Value: startDate},
 			{Field: "attendance_date", Operator: "<=", Value: endDate},
 		},
@@ -78,7 +83,7 @@ func (m *StudentAttendanceManager) GetByDateRange(ctx context.Context, startDate
 		)
 		return nil, fmt.Errorf("failed to get attendance by date range: %w", err)
 	}
-	return records, nil
+	return DereferenceSlice(records), nil
 }
 
 // GetStudentAttendanceStats возвращает статистику посещаемости студента
@@ -100,23 +105,45 @@ func (m *StudentAttendanceManager) GetStudentAttendanceStats(ctx context.Context
 
 // BulkCreate создает несколько записей посещаемости в транзакции
 func (m *StudentAttendanceManager) BulkCreate(ctx context.Context, records []*domain.StudentAttendance) error {
-	return m.ExecuteInTx(ctx, m.repo.(TxProvider), func(repo Repository[domain.StudentAttendance, *domain.StudentAttendance]) error {
-		for _, record := range records {
-			if err := record.Validate(); err != nil {
-				return fmt.Errorf("validation failed: %w", err)
-			}
-			if err := repo.Create(ctx, record); err != nil {
-				return fmt.Errorf("create failed: %w", err)
-			}
+	tx, err := m.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin transaction: %w", err)
+	}
+
+	txRepo := m.repo.WithTx(tx)
+
+	defer func() {
+		if p := recover(); p != nil {
+			tx.Rollback()
+			panic(p)
+		} else if err != nil {
+			tx.Rollback()
 		}
-		return nil
-	})
+	}()
+
+	for _, record := range records {
+		if err := record.Validate(); err != nil {
+			return fmt.Errorf("validation failed for record %v: %w", record, err)
+		}
+
+		// Создаем указатель на указатель, который ожидает репозиторий
+		ptrToRecord := &record
+		if err := txRepo.Create(ctx, ptrToRecord); err != nil {
+			return fmt.Errorf("create failed for record %v: %w", record, err)
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	return nil
 }
 
 // CheckDuplicate проверяет наличие дублирующей записи посещаемости
 func (m *StudentAttendanceManager) CheckDuplicate(ctx context.Context, studentID, lessonID int) (bool, error) {
-	records, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	records, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "student_id", Operator: "=", Value: studentID},
 			{Field: "lesson_id", Operator: "=", Value: lessonID},
 		},

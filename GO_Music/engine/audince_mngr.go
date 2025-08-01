@@ -2,33 +2,38 @@ package engine
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
+	"GO_Music/db"
 	"GO_Music/domain"
 
 	"github.com/SerMoskvin/logger"
 )
 
-// AudienceManager расширяет BaseManager для аудиторий
+// AudienceManager реализует бизнес-логику для аудиторий
 type AudienceManager struct {
-	*BaseManager[domain.Audience, *domain.Audience]
+	*BaseManager[int, *domain.Audience]
+	db *sql.DB
 }
 
 func NewAudienceManager(
-	repo Repository[domain.Audience, *domain.Audience],
+	repo db.Repository[*domain.Audience, int],
+	db *sql.DB,
 	logger *logger.LevelLogger,
 	txTimeout time.Duration,
 ) *AudienceManager {
 	return &AudienceManager{
-		BaseManager: NewBaseManager[domain.Audience](repo, logger, txTimeout),
+		BaseManager: NewBaseManager[int, *domain.Audience](repo, logger, txTimeout),
+		db:          db,
 	}
 }
 
 // GetByNumber возвращает аудиторию по номеру
 func (m *AudienceManager) GetByNumber(ctx context.Context, number string) (*domain.Audience, error) {
-	audiences, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	audiences, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "audin_number", Operator: "=", Value: number},
 		},
 		Limit: 1,
@@ -44,30 +49,101 @@ func (m *AudienceManager) GetByNumber(ctx context.Context, number string) (*doma
 	if len(audiences) == 0 {
 		return nil, nil
 	}
-	return audiences[0], nil
+	return *audiences[0], nil
 }
 
 // ListByCapacity возвращает аудитории с вместимостью >= minCapacity
 func (m *AudienceManager) ListByCapacity(ctx context.Context, minCapacity int) ([]*domain.Audience, error) {
-	return m.List(ctx, Filter{
-		Conditions: []Condition{
+	audiences, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "capacity", Operator: ">=", Value: minCapacity},
 		},
 		OrderBy: "capacity DESC",
 	})
+	if err != nil {
+		m.logger.Error("ListByCapacity failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "minCapacity", Value: minCapacity},
+		)
+		return nil, fmt.Errorf("list by capacity failed: %w", err)
+	}
+	return DereferenceSlice(audiences), nil
 }
 
 // CheckNumberUnique проверяет уникальность номера аудитории
 func (m *AudienceManager) CheckNumberUnique(ctx context.Context, number string, excludeID int) (bool, error) {
-	audiences, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	audiences, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "audin_number", Operator: "=", Value: number},
 			{Field: "audience_id", Operator: "!=", Value: excludeID},
 		},
 		Limit: 1,
 	})
 	if err != nil {
-		return false, err
+		m.logger.Error("CheckNumberUnique failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "number", Value: number},
+			logger.Field{Key: "excludeID", Value: excludeID},
+		)
+		return false, fmt.Errorf("check number unique failed: %w", err)
 	}
 	return len(audiences) == 0, nil
+}
+
+// Create создает новую аудиторию
+func (m *AudienceManager) Create(ctx context.Context, audience *domain.Audience) error {
+	if err := audience.Validate(); err != nil {
+		m.logger.Error("Validation failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "audience", Value: audience},
+		)
+		return fmt.Errorf("validation failed: %w", err)
+	}
+
+	// Проверяем уникальность номера аудитории
+	isUnique, err := m.CheckNumberUnique(ctx, audience.AudinNumber, 0)
+	if err != nil {
+		return fmt.Errorf("uniqueness check failed: %w", err)
+	}
+	if !isUnique {
+		return fmt.Errorf("audience number %s already exists", audience.AudinNumber)
+	}
+
+	if err := m.repo.Create(ctx, &audience); err != nil {
+		m.logger.Error("Create failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "audience", Value: audience},
+		)
+		return fmt.Errorf("create failed: %w", err)
+	}
+	return nil
+}
+
+// Update обновляет аудиторию
+func (m *AudienceManager) Update(ctx context.Context, audience *domain.Audience) error {
+	if err := audience.Validate(); err != nil {
+		m.logger.Error("Validation failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "audience", Value: audience},
+		)
+		return fmt.Errorf("validation failed: %w", err)
+	}
+
+	// Проверяем уникальность номера аудитории
+	isUnique, err := m.CheckNumberUnique(ctx, audience.AudinNumber, audience.AudienceID)
+	if err != nil {
+		return fmt.Errorf("uniqueness check failed: %w", err)
+	}
+	if !isUnique {
+		return fmt.Errorf("audience number %s already exists", audience.AudinNumber)
+	}
+
+	if err := m.repo.Update(ctx, &audience); err != nil {
+		m.logger.Error("Update failed",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "audience", Value: audience},
+		)
+		return fmt.Errorf("update failed: %w", err)
+	}
+	return nil
 }

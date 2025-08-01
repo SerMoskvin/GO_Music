@@ -1,7 +1,10 @@
 package engine
 
 import (
+	"database/sql"
 	"time"
+
+	"GO_Music/db/repositories"
 
 	"github.com/SerMoskvin/access"
 	"github.com/SerMoskvin/logger"
@@ -9,7 +12,7 @@ import (
 
 // Managers содержит все менеджеры приложения
 type Managers struct {
-	Assesment     *StudentAssessmentManager
+	Assessment    *StudentAssessmentManager
 	Attendance    *StudentAttendanceManager
 	Audience      *AudienceManager
 	Employee      *EmployeeManager
@@ -26,23 +29,23 @@ type Managers struct {
 }
 
 // NewManagers создает все менеджеры
-func NewManagers(repos *Repositories, logger *logger.LevelLogger, auth *access.Authenticator) *Managers {
+func NewManagers(db *sql.DB, repos *repositories.Repositories, logger *logger.LevelLogger, auth *access.Authenticator) *Managers {
 	txTimeout := 10 * time.Second // Общий таймаут для всех менеджеров
 
 	return &Managers{
-		Audience:      NewAudienceManager(repos.Audience, logger, txTimeout),
-		Assesment:     NewStudentAssessmentManager(repos.Assesment, logger, txTimeout),
-		Attendance:    NewStudentAttendanceManager(repos.Attendance, logger, txTimeout),
-		Employee:      NewEmployeeManager(repos.Employee, logger, txTimeout),
-		StudyGroup:    NewStudyGroupManager(repos.StudyGroup, logger, txTimeout),
-		Schedule:      NewScheduleManager(repos.Schedule, logger, txTimeout),
-		Instrument:    NewInstrumentManager(repos.Instrument, logger, txTimeout),
-		ProgrammDistr: NewProgrammDistributionManager(repos.ProgrammDistr, logger),
-		SubjectDistr:  NewSubjectDistributionManager(repos.SubjectDistr, logger),
-		Lesson:        NewLessonManager(repos.Lesson, logger, txTimeout),
-		Programm:      NewProgrammManager(repos.Programm, logger, txTimeout),
-		Student:       NewStudentManager(repos.Student, logger, txTimeout),
-		Subject:       NewSubjectManager(repos.Subject, logger, txTimeout),
-		User:          NewUserManager(repos.User, logger, txTimeout, auth),
+		Assessment:    NewStudentAssessmentManager(repos.Assessment, db, logger, txTimeout),
+		Attendance:    NewStudentAttendanceManager(repos.Attendance, db, logger, txTimeout),
+		Audience:      NewAudienceManager(repos.Audience, db, logger, txTimeout),
+		Employee:      NewEmployeeManager(repos.Employee, db, logger, txTimeout),
+		StudyGroup:    NewStudyGroupManager(repos.StudyGroup, db, logger, txTimeout),
+		Schedule:      NewScheduleManager(repos.Schedule, db, logger, txTimeout),
+		Instrument:    NewInstrumentManager(repos.Instrument, db, logger, txTimeout),
+		ProgrammDistr: NewProgrammDistributionManager(repos.ProgrammDistr, db, logger, txTimeout),
+		SubjectDistr:  NewSubjectDistributionManager(repos.SubjectDistr, db, logger, txTimeout),
+		Lesson:        NewLessonManager(repos.Lesson, db, logger, txTimeout),
+		Programm:      NewProgrammManager(repos.Programm, db, logger, txTimeout),
+		Student:       NewStudentManager(repos.Student, db, logger, txTimeout),
+		Subject:       NewSubjectManager(repos.Subject, db, logger, txTimeout),
+		User:          NewUserManager(repos.User, db, logger, txTimeout, auth),
 	}
 }

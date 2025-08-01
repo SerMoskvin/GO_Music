@@ -2,6 +2,7 @@ package engine
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -14,10 +15,12 @@ import (
 // StudentAssessmentManager реализует бизнес-логику для оценок студентов
 type StudentAssessmentManager struct {
 	*BaseManager[int, *domain.StudentAssessment]
+	db *sql.DB
 }
 
 func NewStudentAssessmentManager(
 	repo db.Repository[*domain.StudentAssessment, int],
+	db *sql.DB,
 	logger *logger.LevelLogger,
 	txTimeout time.Duration,
 ) *StudentAssessmentManager {
@@ -41,13 +44,13 @@ func (m *StudentAssessmentManager) GetByStudent(ctx context.Context, studentID i
 		)
 		return nil, fmt.Errorf("failed to get assessments by student: %w", err)
 	}
-	return assessments, nil
+	return DereferenceSlice(assessments), nil
 }
 
 // GetByLesson возвращает все оценки за конкретное занятие
 func (m *StudentAssessmentManager) GetByLesson(ctx context.Context, lessonID int) ([]*domain.StudentAssessment, error) {
-	assessments, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	assessments, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "lesson_id", Operator: "=", Value: lessonID},
 		},
 		OrderBy: "student_id",
@@ -59,13 +62,13 @@ func (m *StudentAssessmentManager) GetByLesson(ctx context.Context, lessonID int
 		)
 		return nil, fmt.Errorf("failed to get assessments by lesson: %w", err)
 	}
-	return assessments, nil
+	return DereferenceSlice(assessments), nil
 }
 
 // GetByTaskType возвращает оценки по типу задания
 func (m *StudentAssessmentManager) GetByTaskType(ctx context.Context, taskType string) ([]*domain.StudentAssessment, error) {
-	assessments, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	assessments, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "task_type", Operator: "=", Value: taskType},
 		},
 		OrderBy: "assessment_date DESC",
@@ -77,7 +80,7 @@ func (m *StudentAssessmentManager) GetByTaskType(ctx context.Context, taskType s
 		)
 		return nil, fmt.Errorf("failed to get assessments by task type: %w", err)
 	}
-	return assessments, nil
+	return DereferenceSlice(assessments), nil
 }
 
 // GetStudentAverageGrade вычисляет средний балл студента
@@ -101,8 +104,8 @@ func (m *StudentAssessmentManager) GetStudentAverageGrade(ctx context.Context, s
 
 // GetGradesByDateRange возвращает оценки за период
 func (m *StudentAssessmentManager) GetGradesByDateRange(ctx context.Context, startDate, endDate string) ([]*domain.StudentAssessment, error) {
-	assessments, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	assessments, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "assessment_date", Operator: ">=", Value: startDate},
 			{Field: "assessment_date", Operator: "<=", Value: endDate},
 		},
@@ -116,33 +119,53 @@ func (m *StudentAssessmentManager) GetGradesByDateRange(ctx context.Context, sta
 		)
 		return nil, fmt.Errorf("failed to get assessments by date range: %w", err)
 	}
-	return assessments, nil
+	return DereferenceSlice(assessments), nil
 }
 
 // BulkUpsert массовое обновление/добавление оценок в транзакции
 func (m *StudentAssessmentManager) BulkUpsert(ctx context.Context, assessments []*domain.StudentAssessment) error {
-	return m.ExecuteInTx(ctx, m.repo.(TxProvider), func(repo Repository[domain.StudentAssessment, *domain.StudentAssessment]) error {
-		for _, assessment := range assessments {
-			if err := assessment.Validate(); err != nil {
-				return fmt.Errorf("validation failed: %w", err)
-			}
+	tx, err := m.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin transaction: %w", err)
+	}
 
-			// Проверяем существование записи
-			exists, err := repo.Exists(ctx, assessment.AssessmentNoteID)
-			if err != nil {
-				return fmt.Errorf("exists check failed: %w", err)
-			}
+	txRepo := m.repo.WithTx(tx)
 
-			if exists {
-				if err := repo.Update(ctx, assessment); err != nil {
-					return fmt.Errorf("update failed: %w", err)
-				}
-			} else {
-				if err := repo.Create(ctx, assessment); err != nil {
-					return fmt.Errorf("create failed: %w", err)
-				}
+	defer func() {
+		if p := recover(); p != nil {
+			tx.Rollback()
+			panic(p)
+		} else if err != nil {
+			tx.Rollback()
+		}
+	}()
+
+	for _, assessment := range assessments {
+		if err := assessment.Validate(); err != nil {
+			return fmt.Errorf("validation failed: %w", err)
+		}
+
+		exists, err := txRepo.Exists(ctx, assessment.GetID())
+		if err != nil {
+			return fmt.Errorf("exists check failed: %w", err)
+		}
+
+		if exists {
+			ptrToAssessment := &assessment
+			if err := txRepo.Update(ctx, ptrToAssessment); err != nil {
+				return fmt.Errorf("update failed: %w", err)
+			}
+		} else {
+			ptrToAssessment := &assessment
+			if err := txRepo.Create(ctx, ptrToAssessment); err != nil {
+				return fmt.Errorf("create failed: %w", err)
 			}
 		}
-		return nil
-	})
+	}
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	return nil
 }

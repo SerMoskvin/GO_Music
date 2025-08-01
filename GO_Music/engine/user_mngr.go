@@ -2,38 +2,58 @@ package engine
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"time"
 
+	"GO_Music/db"
 	"GO_Music/domain"
 
 	"github.com/SerMoskvin/access"
-
 	"github.com/SerMoskvin/logger"
 	"github.com/dgrijalva/jwt-go"
 )
 
 // UserManager реализует бизнес-логику для работы с пользователями
 type UserManager struct {
-	*BaseManager[domain.User, *domain.User]
+	*BaseManager[int, *domain.User]
+	db   *sql.DB
 	auth *access.Authenticator
 }
 
 func NewUserManager(
-	repo Repository[domain.User, *domain.User],
+	repo db.Repository[*domain.User, int],
+	db *sql.DB,
 	logger *logger.LevelLogger,
 	txTimeout time.Duration,
 	auth *access.Authenticator,
 ) *UserManager {
 	return &UserManager{
-		BaseManager: NewBaseManager[domain.User](repo, logger, txTimeout),
+		BaseManager: NewBaseManager[int, *domain.User](repo, logger, txTimeout),
+		db:          db,
 		auth:        auth,
 	}
 }
 
 // Register создает нового пользователя с хешированным паролем
 func (m *UserManager) Register(ctx context.Context, user *domain.User) error {
+	if err := user.Validate(); err != nil {
+		m.logger.Error("Validation failed",
+			logger.Field{Key: "error", Value: err},
+		)
+		return fmt.Errorf("validation failed: %w", err)
+	}
+
+	// Проверка уникальности логина
+	isUnique, err := m.CheckLoginUnique(ctx, user.Login, 0)
+	if err != nil {
+		return fmt.Errorf("login uniqueness check failed: %w", err)
+	}
+	if !isUnique {
+		return fmt.Errorf("login %s already exists", user.Login)
+	}
+
 	// Хеширование пароля
 	hashedPassword, err := m.auth.PasswordHasher.HashPassword(user.Password)
 	if err != nil {
@@ -47,14 +67,14 @@ func (m *UserManager) Register(ctx context.Context, user *domain.User) error {
 	// Установка даты регистрации
 	user.RegistrationDate = time.Now()
 
-	return m.Create(ctx, user)
+	ptrToUser := &user
+	return m.repo.Create(ctx, ptrToUser)
 }
 
 // Login выполняет аутентификацию пользователя и возвращает JWT-токен
 func (m *UserManager) Login(ctx context.Context, login, password string) (string, error) {
-	// Находим пользователя по логину
-	users, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	users, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "login", Operator: "=", Value: login},
 		},
 		Limit: 1,
@@ -74,9 +94,9 @@ func (m *UserManager) Login(ctx context.Context, login, password string) (string
 		return "", fmt.Errorf("authentication failed")
 	}
 
-	user := users[0]
+	user := *users[0]
 
-	// Проверяем пароль
+	// Проверка пароля
 	if !m.auth.PasswordHasher.CheckPasswordHash(password, user.Password) {
 		m.logger.Warn("Login failed - invalid password",
 			logger.Field{Key: "login", Value: login},
@@ -84,7 +104,7 @@ func (m *UserManager) Login(ctx context.Context, login, password string) (string
 		return "", fmt.Errorf("authentication failed")
 	}
 
-	// Генерируем JWT-токен
+	// Генерация токена
 	token, err := m.auth.JwtService.GenerateJWT(user.UserID, user.Login, user.Role)
 	if err != nil {
 		m.logger.Error("Login failed - token generation error",
@@ -109,15 +129,27 @@ func (m *UserManager) GetCurrentUser(ctx context.Context) (*domain.User, error) 
 		return nil, errors.New("invalid user ID in token")
 	}
 
-	return m.GetByID(ctx, int(userID))
+	userPtr, err := m.GetByID(ctx, int(userID))
+	if err != nil {
+		return nil, err
+	}
+	if userPtr == nil {
+		return nil, errors.New("user not found")
+	}
+	return *userPtr, nil
 }
 
-// ChangePassword изменяет пароль пользователя с проверкой старого
+// ChangePassword изменяет пароль пользователя
 func (m *UserManager) ChangePassword(ctx context.Context, userID int, oldPassword, newPassword string) error {
-	user, err := m.GetByID(ctx, userID)
+	userPtr, err := m.GetByID(ctx, userID)
 	if err != nil {
 		return fmt.Errorf("failed to get user: %w", err)
 	}
+	if userPtr == nil {
+		return fmt.Errorf("user not found")
+	}
+
+	user := *userPtr
 
 	if !m.auth.PasswordHasher.CheckPasswordHash(oldPassword, user.Password) {
 		return fmt.Errorf("invalid old password")
@@ -129,13 +161,14 @@ func (m *UserManager) ChangePassword(ctx context.Context, userID int, oldPasswor
 	}
 
 	user.Password = hashedPassword
-	return m.Update(ctx, user)
+	ptrToUser := &user
+	return m.Update(ctx, ptrToUser)
 }
 
 // GetByRole возвращает пользователей по роли
 func (m *UserManager) GetByRole(ctx context.Context, role string) ([]*domain.User, error) {
-	users, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	users, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "role", Operator: "=", Value: role},
 		},
 		OrderBy: "surname, name",
@@ -147,21 +180,19 @@ func (m *UserManager) GetByRole(ctx context.Context, role string) ([]*domain.Use
 		)
 		return nil, fmt.Errorf("failed to get users by role: %w", err)
 	}
-	return users, nil
+	return DereferenceSlice(users), nil
 }
 
 // SearchByNames ищет пользователей по ФИО
 func (m *UserManager) SearchByNames(ctx context.Context, query string) ([]*domain.User, error) {
-	users, err := m.List(ctx, Filter{
-		Conditions: []Condition{
-			{
-				Field:    "CONCAT(surname, ' ', name, ' ', COALESCE(father_name, ''))",
-				Operator: "ILIKE",
-				Value:    "%" + query + "%",
-			},
-		},
-		OrderBy: "surname, name",
+	repo, ok := m.repo.(interface {
+		SearchByName(ctx context.Context, query string) ([]*domain.User, error)
 	})
+	if !ok {
+		return nil, fmt.Errorf("repository doesn't support SearchByName")
+	}
+
+	users, err := repo.SearchByName(ctx, query)
 	if err != nil {
 		m.logger.Error("SearchByNames failed",
 			logger.Field{Key: "error", Value: err},
@@ -174,8 +205,8 @@ func (m *UserManager) SearchByNames(ctx context.Context, query string) ([]*domai
 
 // CheckLoginUnique проверяет уникальность логина
 func (m *UserManager) CheckLoginUnique(ctx context.Context, login string, excludeID int) (bool, error) {
-	users, err := m.List(ctx, Filter{
-		Conditions: []Condition{
+	users, err := m.List(ctx, db.Filter{
+		Conditions: []db.Condition{
 			{Field: "login", Operator: "=", Value: login},
 			{Field: "user_id", Operator: "!=", Value: excludeID},
 		},
@@ -189,4 +220,23 @@ func (m *UserManager) CheckLoginUnique(ctx context.Context, login string, exclud
 		return false, fmt.Errorf("failed to check login uniqueness: %w", err)
 	}
 	return len(users) == 0, nil
+}
+
+// UpdateProfile обновляет профиль пользователя
+func (m *UserManager) UpdateProfile(ctx context.Context, user *domain.User) error {
+	if err := user.Validate(); err != nil {
+		return fmt.Errorf("validation failed: %w", err)
+	}
+
+	// Проверка уникальности логина
+	isUnique, err := m.CheckLoginUnique(ctx, user.Login, user.UserID)
+	if err != nil {
+		return fmt.Errorf("login uniqueness check failed: %w", err)
+	}
+	if !isUnique {
+		return fmt.Errorf("login %s already exists", user.Login)
+	}
+
+	ptrToUser := &user
+	return m.Update(ctx, ptrToUser)
 }

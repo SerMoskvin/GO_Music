@@ -173,3 +173,14 @@ func (m *BaseManager[ID, T]) ExecuteInTx(
 	}
 	return nil
 }
+
+// DereferenceSlice преобразует []**T в []*T
+func DereferenceSlice[T any](ptrSlice []**T) []*T {
+	result := make([]*T, len(ptrSlice))
+	for i, ptr := range ptrSlice {
+		if ptr != nil { // Проверка на nil для безопасности
+			result[i] = *ptr
+		}
+	}
+	return result
+}
