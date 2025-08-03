@@ -8,12 +8,12 @@ import (
 )
 
 type InstrumentRepository struct {
-	*postgreSQL.PostgresRepository[*domain.Instrument, int]
+	*postgreSQL.PostgresRepository[domain.Instrument, int]
 }
 
 func NewInstrumentRepository(db *sql.DB) *InstrumentRepository {
 	return &InstrumentRepository{
-		PostgresRepository: postgreSQL.NewPostgresRepository[*domain.Instrument, int](
+		PostgresRepository: postgreSQL.NewPostgresRepository[domain.Instrument, int](
 			db,
 			"instrument",    // имя таблицы
 			"instrument_id", // имя поля с ID

@@ -8,12 +8,12 @@ import (
 )
 
 type StudyGroupRepository struct {
-	*postgreSQL.PostgresRepository[*domain.StudyGroup, int]
+	*postgreSQL.PostgresRepository[domain.StudyGroup, int]
 }
 
 func NewStudyGroupRepository(db *sql.DB) *StudyGroupRepository {
 	return &StudyGroupRepository{
-		PostgresRepository: postgreSQL.NewPostgresRepository[*domain.StudyGroup, int](
+		PostgresRepository: postgreSQL.NewPostgresRepository[domain.StudyGroup, int](
 			db,
 			"study_group", // имя таблицы
 			"group_id",    // имя поля с ID

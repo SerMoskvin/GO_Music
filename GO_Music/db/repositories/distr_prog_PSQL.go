@@ -8,12 +8,12 @@ import (
 )
 
 type ProgrammDistributionRepository struct {
-	*postgreSQL.PostgresRepository[*domain.ProgrammDistribution, int]
+	*postgreSQL.PostgresRepository[domain.ProgrammDistribution, int]
 }
 
 func NewProgrammDistributionRepository(db *sql.DB) *ProgrammDistributionRepository {
 	return &ProgrammDistributionRepository{
-		PostgresRepository: postgreSQL.NewPostgresRepository[*domain.ProgrammDistribution, int](
+		PostgresRepository: postgreSQL.NewPostgresRepository[domain.ProgrammDistribution, int](
 			db,
 			"programm_distribution", // имя таблицы
 			"programm_distr_id",     // имя поля с ID

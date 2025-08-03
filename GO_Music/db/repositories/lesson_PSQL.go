@@ -11,13 +11,13 @@ import (
 )
 
 type LessonRepository struct {
-	*postgreSQL.PostgresRepository[*domain.Lesson, int]
+	*postgreSQL.PostgresRepository[domain.Lesson, int]
 	db *sql.DB
 }
 
 func NewLessonRepository(db *sql.DB) *LessonRepository {
 	return &LessonRepository{
-		PostgresRepository: postgreSQL.NewPostgresRepository[*domain.Lesson, int](
+		PostgresRepository: postgreSQL.NewPostgresRepository[domain.Lesson, int](
 			db,
 			"lesson",    // имя таблицы
 			"lesson_id", // имя поля с ID
@@ -36,8 +36,8 @@ func (r *LessonRepository) CheckEmployeeAvailability(
 ) (bool, error) {
 	query := `
 		SELECT NOT EXISTS(
-			SELECT 1 FROM lessons l
-			JOIN schedules s ON l.lesson_id = s.lesson_id
+			SELECT 1 FROM lesson l
+			JOIN schedule s ON l.lesson_id = s.lesson_id
 			WHERE l.employee_id = $1
 			AND l.lesson_id != $4
 			AND s.day_week = $5
@@ -72,8 +72,8 @@ func (r *LessonRepository) CheckAudienceAvailability(
 ) (bool, error) {
 	query := `
 		SELECT NOT EXISTS(
-			SELECT 1 FROM lessons l
-			JOIN schedules s ON l.lesson_id = s.lesson_id
+			SELECT 1 FROM lesson l
+			JOIN schedule s ON l.lesson_id = s.lesson_id
 			WHERE l.audience_id = $1
 			AND l.lesson_id != $4
 			AND s.day_week = $5

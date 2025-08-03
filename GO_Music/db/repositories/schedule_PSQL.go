@@ -8,12 +8,12 @@ import (
 )
 
 type ScheduleRepository struct {
-	*postgreSQL.PostgresRepository[*domain.Schedule, int]
+	*postgreSQL.PostgresRepository[domain.Schedule, int]
 }
 
 func NewScheduleRepository(db *sql.DB) *ScheduleRepository {
 	return &ScheduleRepository{
-		PostgresRepository: postgreSQL.NewPostgresRepository[*domain.Schedule, int](
+		PostgresRepository: postgreSQL.NewPostgresRepository[domain.Schedule, int](
 			db,
 			"schedule",    // имя таблицы
 			"schedule_id", // имя поля с ID

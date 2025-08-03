@@ -61,6 +61,9 @@ func (r *PostgresRepository[T, ID]) Create(ctx context.Context, entity *T) error
 		return err
 	}
 
+	// Исключаем ID-колонку из вставки
+	delete(m, r.idColumn)
+
 	columns := make([]string, 0, len(m))
 	placeholders := make([]string, 0, len(m))
 	values := make([]interface{}, 0, len(m))
@@ -74,14 +77,26 @@ func (r *PostgresRepository[T, ID]) Create(ctx context.Context, entity *T) error
 	}
 
 	query := fmt.Sprintf(
-		"INSERT INTO %s (%s) VALUES (%s)",
+		"INSERT INTO %s (%s) VALUES (%s) RETURNING %s",
 		r.tableName,
 		strings.Join(columns, ", "),
 		strings.Join(placeholders, ", "),
+		r.idColumn,
 	)
 
-	_, err = r.ExecContext(ctx, query, values...)
-	return err
+	// Получаем сгенерированный ID
+	var id ID
+	err = r.QueryRowContext(ctx, query, values...).Scan(&id)
+	if err != nil {
+		return err
+	}
+
+	// Устанавливаем полученный ID обратно в структуру
+	if setter, ok := any(entity).(interface{ SetID(ID) }); ok {
+		setter.SetID(id)
+	}
+
+	return nil
 }
 
 // Update обновляет запись по id
@@ -134,10 +149,23 @@ func (r *PostgresRepository[T, ID]) GetByID(ctx context.Context, id ID) (*T, err
 		return nil, err
 	}
 
+	// Создаем слайс для сканирования, учитывая nullable поля
 	values := make([]interface{}, len(cols))
 	valuePtrs := make([]interface{}, len(cols))
-	for i := range cols {
-		valuePtrs[i] = &values[i]
+
+	// Для nullable строк используем sql.NullString
+	nullStringMap := map[string]*sql.NullString{}
+	for i, col := range cols {
+		if strings.HasSuffix(col, "_string") { // или другой способ идентификации
+			ns := new(sql.NullString)
+			values[i] = ns
+			nullStringMap[col] = ns
+			valuePtrs[i] = ns
+		} else {
+			var v interface{}
+			values[i] = &v
+			valuePtrs[i] = &v
+		}
 	}
 
 	err = row.Scan(valuePtrs...)
@@ -147,11 +175,22 @@ func (r *PostgresRepository[T, ID]) GetByID(ctx context.Context, id ID) (*T, err
 
 	m := make(map[string]interface{})
 	for i, col := range cols {
-		val := values[i]
-		if b, ok := val.([]byte); ok {
-			m[col] = string(b)
+		if ns, ok := nullStringMap[col]; ok {
+			if ns.Valid {
+				// Создаем копию строки, чтобы избежать проблем с указателями
+				str := ns.String
+				m[col] = &str
+			} else {
+				m[col] = nil
+			}
 		} else {
-			m[col] = val
+			valPtr := values[i].(*interface{})
+			val := *valPtr
+			if b, ok := val.([]byte); ok {
+				m[col] = string(b)
+			} else {
+				m[col] = val
+			}
 		}
 	}
 

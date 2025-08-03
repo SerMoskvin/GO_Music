@@ -9,12 +9,12 @@ import (
 )
 
 type UserRepository struct {
-	*postgreSQL.PostgresRepository[*domain.User, int]
+	*postgreSQL.PostgresRepository[domain.User, int]
 }
 
 func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{
-		PostgresRepository: postgreSQL.NewPostgresRepository[*domain.User, int](
+		PostgresRepository: postgreSQL.NewPostgresRepository[domain.User, int](
 			db,
 			"users",   // имя таблицы
 			"user_id", // имя поля с ID

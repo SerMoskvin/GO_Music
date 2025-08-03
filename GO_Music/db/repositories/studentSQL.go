@@ -10,12 +10,12 @@ import (
 )
 
 type StudentRepository struct {
-	*postgreSQL.PostgresRepository[*domain.Student, int]
+	*postgreSQL.PostgresRepository[domain.Student, int]
 }
 
 func NewStudentRepository(db *sql.DB) *StudentRepository {
 	return &StudentRepository{
-		PostgresRepository: postgreSQL.NewPostgresRepository[*domain.Student, int](
+		PostgresRepository: postgreSQL.NewPostgresRepository[domain.Student, int](
 			db,
 			"student",    // имя таблицы
 			"student_id", // имя поля с ID
@@ -26,7 +26,7 @@ func NewStudentRepository(db *sql.DB) *StudentRepository {
 // Кастомные SQL-запросы для студентов
 const (
 	searchStudentsByNameQuery = `
-		SELECT * FROM students 
+		SELECT * FROM student 
 		WHERE CONCAT(surname, ' ', name, ' ', COALESCE(father_name, '')) ILIKE $1
 		ORDER BY surname, name`
 )

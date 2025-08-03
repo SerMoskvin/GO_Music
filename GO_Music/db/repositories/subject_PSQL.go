@@ -9,12 +9,12 @@ import (
 )
 
 type SubjectRepository struct {
-	*postgreSQL.PostgresRepository[*domain.Subject, int]
+	*postgreSQL.PostgresRepository[domain.Subject, int]
 }
 
 func NewSubjectRepository(db *sql.DB) *SubjectRepository {
 	return &SubjectRepository{
-		PostgresRepository: postgreSQL.NewPostgresRepository[*domain.Subject, int](
+		PostgresRepository: postgreSQL.NewPostgresRepository[domain.Subject, int](
 			db,
 			"subject",    // имя таблицы
 			"subject_id", // имя поля с ID
@@ -25,15 +25,15 @@ func NewSubjectRepository(db *sql.DB) *SubjectRepository {
 // Кастомные SQL-запросы для предметов
 const (
 	getPopularSubjectsQuery = `
-		SELECT s.* FROM subjects s
-		JOIN programm_distributions pd ON s.subject_id = pd.subject_id
+		SELECT s.* FROM subject s
+		JOIN programm_distribution pd ON s.subject_id = pd.subject_id
 		GROUP BY s.subject_id
 		ORDER BY COUNT(pd.musprogramm_id) DESC
 		LIMIT $1`
 
 	getSubjectsWithProgramsQuery = `
-		SELECT s.* FROM subjects s
-		JOIN programm_distributions pd ON s.subject_id = pd.subject_id
+		SELECT s.* FROM subject s
+		JOIN programm_distribution pd ON s.subject_id = pd.subject_id
 		WHERE pd.musprogramm_id = $1
 		ORDER BY s.subject_name`
 )
