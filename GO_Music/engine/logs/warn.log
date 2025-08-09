@@ -1,0 +1,2 @@
+{"level":"WARN","timestamp":"2025-08-09T13:10:31.382+0300","caller":"engine/user_mngr.go:94","message":"Login failed - user not found","login":"testuser123"}
+{"level":"WARN","timestamp":"2025-08-09T13:12:35.148+0300","caller":"engine/user_mngr.go:104","message":"Login failed - invalid password","login":"testuser123"}
