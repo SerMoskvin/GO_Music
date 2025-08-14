@@ -18,11 +18,11 @@
 
 ## Progression list
 
-✅ ~~Silly README file~~    
-✅ .github folder with dependabot and coverage yml;    
-✅ (1) Domain layer - 🔖0.1.0;  
-✅ (2) Repo layer - 🔖0.2.0;
-✅ (3) Engine layer - 🔖0.2.0;
+- [x] ~~Silly README file~~    
+- [x] .github folder with dependabot and coverage yml;    
+- [x] (1) Domain layer - 🔖0.1.0;  
+- [x] (2) Repo layer - 🔖0.2.0;
+- [x] (3) Engine layer - 🔖0.2.0;
 - [ ] (4) API layer (DTO&Handlers) - ;
 - [ ] File with endpoints ("*router*") - ;
 - [ ] WEB-pages - ;
@@ -36,3 +36,7 @@
 - [ ] Docker - ;
 - [ ] SQL Migration - ;
 - [ ] Documentation update - .
+
+## Dependencies  
+This project uses the following open-source components:  
+- [navid-m/arrow](https://github.com/navid-m/arrow) — Licensed under [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.html) 
