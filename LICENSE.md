@@ -1,5 +1,5 @@
-<div align="center">GNU GENERAL PUBLIC LICENSE</div>
-<div align="center">Version 3, 29 June 2007</div>
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
  Everyone is permitted to copy and distribute verbatim copies
@@ -68,7 +68,7 @@ patents cannot be used to render the program non-free.
   The precise terms and conditions for copying, distribution and
 modification follow.
 
-                       TERMS AND CONDITIONS
+<div align="center">TERMS AND CONDITIONS</div>
 
 0. Definitions.
 
