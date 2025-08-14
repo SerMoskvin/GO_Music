@@ -1,6 +1,6 @@
 # Project "**GO_Music**"
 
-![GitHub](https://img.shields.io/github/license/SerMoskvin/GO_Music/color=red)
+![GitHub License](https://img.shields.io/github/license/SerMoskvin/GO_Music?color=red)
 [![Go Version](https://img.shields.io/badge/Go-1.24+-blue.svg)](https://golang.org/doc/install)
 ![Version](https://img.shields.io/github/v/tag/SerMoskvin/GO_Music)
 ![GitHub last commit](https://img.shields.io/github/last-commit/SerMoskvin/GO_Music)
