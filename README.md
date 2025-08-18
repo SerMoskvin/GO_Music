@@ -39,4 +39,18 @@
 
 ## Dependencies  
 This project uses the following open-source components:  
-- [navid-m/arrow](https://github.com/navid-m/arrow) — Licensed under [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.html) 
+- [navid-m/arrow](https://github.com/navid-m/arrow) — Licensed under [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0)
+
+## Funny
+
+<picture>
+  <source
+    media="(prefers-color-scheme: dark)"
+    srcset="activity/breakout-dark.svg"
+  />
+  <source
+    media="(prefers-color-scheme: light)"
+    srcset="activity/breakout-light.svg"
+  />
+  <img alt="Breakout Game" src="activity/breakout-light.svg" />
+</picture>
