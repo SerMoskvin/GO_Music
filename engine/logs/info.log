@@ -1,0 +1,162 @@
+{"level":"INFO","timestamp":"2025-08-07T21:08:04.157+0300","caller":"logger@v1.0.3/logger.go:80","message":"Create successful","AssessmentNoteID":37}
+{"level":"INFO","timestamp":"2025-08-07T21:08:04.204+0300","caller":"logger@v1.0.3/logger.go:80","message":"GetByID successful","StudentID":2}
+{"level":"INFO","timestamp":"2025-08-07T21:08:04.208+0300","caller":"logger@v1.0.3/logger.go:80","message":"Update successful","AssessmentNoteID":37}
+{"level":"INFO","timestamp":"2025-08-07T21:08:04.209+0300","caller":"logger@v1.0.3/logger.go:80","message":"List successful","count":6}
+{"level":"INFO","timestamp":"2025-08-07T21:08:04.212+0300","caller":"logger@v1.0.3/logger.go:80","message":"Assessment exists after BulkUpsert","AssessmentNoteID":38}
+{"level":"INFO","timestamp":"2025-08-07T21:08:04.212+0300","caller":"logger@v1.0.3/logger.go:80","message":"Assessment exists after BulkUpsert","AssessmentNoteID":39}
+{"level":"INFO","timestamp":"2025-08-07T21:08:04.213+0300","caller":"logger@v1.0.3/logger.go:80","message":"GetByLesson successful","lessonID":2,"count":5}
+{"level":"INFO","timestamp":"2025-08-07T21:08:04.213+0300","caller":"logger@v1.0.3/logger.go:80","message":"GetStudentAverageGrade successful","StudentID":2,"averageGrade":5.25}
+{"level":"INFO","timestamp":"2025-08-07T21:08:04.214+0300","caller":"logger@v1.0.3/logger.go:80","message":"Delete successful","AssessmentNoteID":37}
+{"level":"INFO","timestamp":"2025-08-07T21:37:31.822+0300","caller":"logger@v1.0.4/level_logger.go:58","message":"Create successful","AssessmentNoteID":40}
+{"level":"INFO","timestamp":"2025-08-07T21:37:31.971+0300","caller":"logger@v1.0.4/level_logger.go:58","message":"GetByID successful","StudentID":2}
+{"level":"INFO","timestamp":"2025-08-07T21:37:31.974+0300","caller":"logger@v1.0.4/level_logger.go:58","message":"Update successful","AssessmentNoteID":40}
+{"level":"INFO","timestamp":"2025-08-07T21:37:31.975+0300","caller":"logger@v1.0.4/level_logger.go:58","message":"List successful","count":8}
+{"level":"INFO","timestamp":"2025-08-07T21:37:31.978+0300","caller":"logger@v1.0.4/level_logger.go:58","message":"Assessment exists after BulkUpsert","AssessmentNoteID":41}
+{"level":"INFO","timestamp":"2025-08-07T21:37:31.978+0300","caller":"logger@v1.0.4/level_logger.go:58","message":"Assessment exists after BulkUpsert","AssessmentNoteID":42}
+{"level":"INFO","timestamp":"2025-08-07T21:37:31.978+0300","caller":"logger@v1.0.4/level_logger.go:58","message":"GetByLesson successful","lessonID":2,"count":6}
+{"level":"INFO","timestamp":"2025-08-07T21:37:31.979+0300","caller":"logger@v1.0.4/level_logger.go:58","message":"GetStudentAverageGrade successful","StudentID":2,"averageGrade":5.1}
+{"level":"INFO","timestamp":"2025-08-07T21:37:31.980+0300","caller":"logger@v1.0.4/level_logger.go:58","message":"Delete successful","AssessmentNoteID":40}
+{"level":"INFO","timestamp":"2025-08-07T22:12:51.677+0300","caller":"test/assesment_m_test.go:71","message":"Create successful","AssessmentNoteID":43}
+{"level":"INFO","timestamp":"2025-08-07T22:12:51.723+0300","caller":"test/assesment_m_test.go:91","message":"GetByID successful","StudentID":2}
+{"level":"INFO","timestamp":"2025-08-07T22:12:51.726+0300","caller":"test/assesment_m_test.go:116","message":"Update successful","AssessmentNoteID":43}
+{"level":"INFO","timestamp":"2025-08-07T22:12:51.727+0300","caller":"test/assesment_m_test.go:142","message":"List successful","count":10}
+{"level":"INFO","timestamp":"2025-08-07T22:12:51.729+0300","caller":"test/assesment_m_test.go:159","message":"Assessment exists after BulkUpsert","AssessmentNoteID":44}
+{"level":"INFO","timestamp":"2025-08-07T22:12:51.730+0300","caller":"test/assesment_m_test.go:159","message":"Assessment exists after BulkUpsert","AssessmentNoteID":45}
+{"level":"INFO","timestamp":"2025-08-07T22:12:51.730+0300","caller":"test/assesment_m_test.go:168","message":"GetByLesson successful","lessonID":2,"count":7}
+{"level":"INFO","timestamp":"2025-08-07T22:12:51.731+0300","caller":"test/assesment_m_test.go:175","message":"GetStudentAverageGrade successful","StudentID":2,"averageGrade":5}
+{"level":"INFO","timestamp":"2025-08-07T22:12:51.732+0300","caller":"test/assesment_m_test.go:195","message":"Delete successful","AssessmentNoteID":43}
+{"level":"INFO","timestamp":"2025-08-07T22:12:51.732+0300","caller":"test/assesment_m_test.go:200","message":"All tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-07T22:14:52.907+0300","caller":"test/assesment_m_test.go:189","message":"All tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-07T22:28:44.792+0300","caller":"test/attendance_m_test.go:242","message":"All tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-07T23:00:23.325+0300","caller":"test/attendance_m_test.go:243","message":"All tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-08T09:23:52.337+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":2,"Number":"104","Capacity":400}
+{"level":"INFO","timestamp":"2025-08-08T09:23:52.338+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":22,"Number":"A-101","Capacity":60}
+{"level":"INFO","timestamp":"2025-08-08T09:23:52.338+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":3,"Number":"203","Capacity":31}
+{"level":"INFO","timestamp":"2025-08-08T09:23:52.338+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":11,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:23:52.338+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":1,"Number":"101","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:23:52.338+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":15,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:23:52.338+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":17,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:23:52.338+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":19,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:23:52.338+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":21,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:23:52.338+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":13,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:23:52.338+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":7,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:23:52.338+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":9,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:24:24.458+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":2,"Number":"104","Capacity":400}
+{"level":"INFO","timestamp":"2025-08-08T09:24:24.496+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":3,"Number":"203","Capacity":31}
+{"level":"INFO","timestamp":"2025-08-08T09:24:24.496+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":9,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:24:24.496+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":11,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:24:24.496+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":13,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:24:24.496+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":15,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:24:24.496+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":17,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:24:24.496+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":19,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:24:24.496+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":1,"Number":"101","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:24:24.496+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":21,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:24:24.496+0300","caller":"test/audience_m_test.go:87","message":"Returned audience","ID":7,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:20.761+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":2,"Number":"104","Capacity":400}
+{"level":"INFO","timestamp":"2025-08-08T09:44:20.761+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":23,"Number":"A-101","Capacity":60}
+{"level":"INFO","timestamp":"2025-08-08T09:44:20.762+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":3,"Number":"203","Capacity":31}
+{"level":"INFO","timestamp":"2025-08-08T09:44:20.762+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":11,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:20.762+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":1,"Number":"101","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:20.762+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":15,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:20.762+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":17,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:20.762+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":19,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:20.762+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":21,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:20.762+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":13,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:20.762+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":7,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:20.762+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":9,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:39.475+0300","caller":"test/audience_m_test.go:69","message":"Created audience","ID":24,"Number":"A-101","Capacity":22}
+{"level":"INFO","timestamp":"2025-08-08T09:44:39.514+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":2,"Number":"104","Capacity":400}
+{"level":"INFO","timestamp":"2025-08-08T09:44:39.514+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":3,"Number":"203","Capacity":31}
+{"level":"INFO","timestamp":"2025-08-08T09:44:39.514+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":9,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:39.514+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":11,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:39.514+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":13,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:39.514+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":15,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:39.514+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":17,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:39.514+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":19,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:39.514+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":1,"Number":"101","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:39.514+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":21,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:44:39.514+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":7,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":2,"Number":"104","Capacity":400}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":24,"Number":"A-101","Capacity":60}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":3,"Number":"203","Capacity":31}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":1,"Number":"101","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":13,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":15,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":17,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":19,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":21,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":11,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":7,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":9,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:18.141+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":4,"Number":"303","Capacity":29}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.809+0300","caller":"test/audience_m_test.go:69","message":"Created audience","ID":25,"Number":"A-101","Capacity":22}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":2,"Number":"104","Capacity":400}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":3,"Number":"203","Capacity":31}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":1,"Number":"101","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":19,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":21,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":7,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":9,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":11,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":13,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":15,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":17,"Number":"202","Capacity":30}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":4,"Number":"303","Capacity":29}
+{"level":"INFO","timestamp":"2025-08-08T09:50:36.850+0300","caller":"test/audience_m_test.go:88","message":"Returned audience","ID":25,"Number":"A-101","Capacity":22}
+{"level":"INFO","timestamp":"2025-08-08T09:52:34.938+0300","caller":"test/audience_m_test.go:69","message":"Created audience","ID":26,"Number":"A-101","Capacity":22}
+{"level":"INFO","timestamp":"2025-08-08T09:52:34.980+0300","caller":"test/audience_m_test.go:134","message":"All tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-08T10:41:55.482+0300","caller":"test/distr_prog_m_test.go:66","message":"Created distribution","ID":14}
+{"level":"INFO","timestamp":"2025-08-08T10:41:55.522+0300","caller":"test/distr_prog_m_test.go:127","message":"All tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-08T12:52:14.512+0300","caller":"test/employee_m_test.go:73","message":"Created employee","ID":61}
+{"level":"INFO","timestamp":"2025-08-08T13:00:57.926+0300","caller":"test/employee_m_test.go:73","message":"Created employee","ID":65}
+{"level":"INFO","timestamp":"2025-08-08T13:00:58.004+0300","caller":"test/employee_m_test.go:208","message":"All EmployeeManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-08T13:21:30.705+0300","caller":"test/group_m_test.go:68","message":"Created study group","ID":14}
+{"level":"INFO","timestamp":"2025-08-08T13:24:03.054+0300","caller":"test/group_m_test.go:68","message":"Created study group","ID":17}
+{"level":"INFO","timestamp":"2025-08-08T13:24:03.143+0300","caller":"test/group_m_test.go:188","message":"All StudyGroupManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-08T13:28:05.366+0300","caller":"test/instrument_m_test.go:66","message":"Created instrument","ID":12}
+{"level":"INFO","timestamp":"2025-08-08T13:28:05.453+0300","caller":"test/instrument_m_test.go:186","message":"All InstrumentManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-08T15:31:12.912+0300","caller":"test/lesson_m_test.go:195","message":"All LessonManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-08T16:24:13.558+0300","caller":"test/programm_m_test.go:200","message":"All ProgrammManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-08T18:14:24.604+0300","caller":"test/schedule_m_test.go:160","message":"All ScheduleManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-09T11:18:24.758+0300","caller":"test/student_m_test.go:246","message":"All StudentManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-09T11:24:47.987+0300","caller":"test/subject_m_test.go:167","message":"All SubjectManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-09T18:06:33.922+0300","caller":"test/assesment_m_test.go:210","message":"All tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-09T18:06:38.204+0300","caller":"test/attendance_m_test.go:243","message":"All tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-09T18:07:11.949+0300","caller":"test/employee_m_test.go:73","message":"Created employee","ID":70}
+{"level":"INFO","timestamp":"2025-08-09T18:07:20.464+0300","caller":"test/group_m_test.go:68","message":"Created study group","ID":22}
+{"level":"INFO","timestamp":"2025-08-09T18:07:26.000+0300","caller":"test/instrument_m_test.go:66","message":"Created instrument","ID":17}
+{"level":"INFO","timestamp":"2025-08-09T18:07:30.218+0300","caller":"test/lesson_m_test.go:195","message":"All LessonManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-09T18:42:06.637+0300","caller":"test/user_m_test.go:179","message":"All UserManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-09T19:07:59.847+0300","caller":"test/user_m_test.go:179","message":"All UserManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-10T10:09:16.388+0300","caller":"test/user_m_test.go:179","message":"All UserManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-10T10:33:19.917+0300","caller":"test/user_m_test.go:184","message":"All UserManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-10T10:38:03.093+0300","caller":"managers/user_mngr.go:74","message":"Debug: hashed password before saving","login":"testuser123","hashed_password":"$2a$12$O2rWoeVtZhdjhhHoGpJ9bux4k9NDnQ1dNLgY2rVPmYjfaTfikRhgC"}
+{"level":"INFO","timestamp":"2025-08-10T10:38:03.134+0300","caller":"managers/user_mngr.go:116","message":"Debug: user password hash from DB","login":"testuser123","password_hash":"$2a$12$O2rWoeVtZhdjhhHoGpJ9bux4k9NDnQ1dNLgY2rVPmYjfaTfikRhgC"}
+{"level":"INFO","timestamp":"2025-08-10T10:38:03.636+0300","caller":"managers/user_mngr.go:116","message":"Debug: user password hash from DB","login":"testuser123","password_hash":"$2a$12$a9qfiFzbLsHxgH4fraHrgu0Uum7b/apAMS2aj5R3f.ytRxPxVNHfC"}
+{"level":"INFO","timestamp":"2025-08-10T10:38:03.859+0300","caller":"managers/user_mngr.go:116","message":"Debug: user password hash from DB","login":"testuser123","password_hash":"$2a$12$a9qfiFzbLsHxgH4fraHrgu0Uum7b/apAMS2aj5R3f.ytRxPxVNHfC"}
+{"level":"INFO","timestamp":"2025-08-10T10:38:04.091+0300","caller":"test/user_m_test.go:184","message":"All UserManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-10T11:33:59.535+0300","caller":"managers/user_mngr.go:74","message":"Debug: hashed password before saving","login":"testuser123","hashed_password":"$2a$12$IYV6DEwRB3FXtKbWsi0VGuDY4UV7v7VuRdEl9vu9RYbiNSoznNQL."}
+{"level":"INFO","timestamp":"2025-08-10T11:33:59.624+0300","caller":"test/user_m_test.go:88","message":"Registered user password hash","hash":"$2a$12$IYV6DEwRB3FXtKbWsi0VGuDY4UV7v7VuRdEl9vu9RYbiNSoznNQL.","login":"testuser123"}
+{"level":"INFO","timestamp":"2025-08-10T11:33:59.625+0300","caller":"managers/user_mngr.go:116","message":"Debug: user password hash from DB","login":"testuser123","password_hash":"$2a$12$IYV6DEwRB3FXtKbWsi0VGuDY4UV7v7VuRdEl9vu9RYbiNSoznNQL."}
+{"level":"INFO","timestamp":"2025-08-10T11:33:59.852+0300","caller":"test/user_m_test.go:109","message":"Login test: stored password hash","hash":"$2a$12$IYV6DEwRB3FXtKbWsi0VGuDY4UV7v7VuRdEl9vu9RYbiNSoznNQL."}
+{"level":"INFO","timestamp":"2025-08-10T11:33:59.852+0300","caller":"test/user_m_test.go:113","message":"PasswordHasher.CheckPasswordHash result","match":true}
+{"level":"INFO","timestamp":"2025-08-10T11:34:00.075+0300","caller":"test/user_m_test.go:118","message":"PasswordHasher.CheckPasswordHash with wrong password","match":false}
+{"level":"INFO","timestamp":"2025-08-10T11:34:00.306+0300","caller":"test/user_m_test.go:173","message":"Password hash after ChangePassword","hash":"$2a$12$27IUHUoYyc764H82dVB86uOdMyDOZEgMiS4NlrLWr8FaZlpoB.KkK"}
+{"level":"INFO","timestamp":"2025-08-10T11:34:00.307+0300","caller":"managers/user_mngr.go:116","message":"Debug: user password hash from DB","login":"testuser123","password_hash":"$2a$12$27IUHUoYyc764H82dVB86uOdMyDOZEgMiS4NlrLWr8FaZlpoB.KkK"}
+{"level":"INFO","timestamp":"2025-08-10T11:34:00.530+0300","caller":"managers/user_mngr.go:116","message":"Debug: user password hash from DB","login":"testuser123","password_hash":"$2a$12$27IUHUoYyc764H82dVB86uOdMyDOZEgMiS4NlrLWr8FaZlpoB.KkK"}
+{"level":"INFO","timestamp":"2025-08-10T11:34:00.760+0300","caller":"test/user_m_test.go:223","message":"All UserManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-10T13:11:57.797+0300","caller":"managers/user_mngr.go:74","message":"Debug: hashed password before saving","login":"testuser123","hashed_password":"$2a$12$qkSFWjAqxf2z/A/Wuga5SeLoYQr.Ncih0aBItlvweeUZkBDPapdfu"}
+{"level":"INFO","timestamp":"2025-08-10T13:11:57.896+0300","caller":"test/user_m_test.go:88","message":"Registered user password hash","hash":"$2a$12$qkSFWjAqxf2z/A/Wuga5SeLoYQr.Ncih0aBItlvweeUZkBDPapdfu","login":"testuser123"}
+{"level":"INFO","timestamp":"2025-08-10T13:11:57.897+0300","caller":"managers/user_mngr.go:116","message":"Debug: user password hash from DB","login":"testuser123","password_hash":"$2a$12$qkSFWjAqxf2z/A/Wuga5SeLoYQr.Ncih0aBItlvweeUZkBDPapdfu"}
+{"level":"INFO","timestamp":"2025-08-10T13:11:58.123+0300","caller":"test/user_m_test.go:109","message":"Login test: stored password hash","hash":"$2a$12$qkSFWjAqxf2z/A/Wuga5SeLoYQr.Ncih0aBItlvweeUZkBDPapdfu"}
+{"level":"INFO","timestamp":"2025-08-10T13:11:58.123+0300","caller":"test/user_m_test.go:113","message":"PasswordHasher.CheckPasswordHash result","match":true}
+{"level":"INFO","timestamp":"2025-08-10T13:11:58.346+0300","caller":"test/user_m_test.go:118","message":"PasswordHasher.CheckPasswordHash with wrong password","match":false}
+{"level":"INFO","timestamp":"2025-08-10T13:11:58.570+0300","caller":"managers/user_mngr.go:74","message":"Debug: hashed password before saving","login":"login_and_login_test","hashed_password":"$2a$12$hyQBzAO0zBTXRm3vVfgQluCzcg.APQBHghkj5hq83/RhTjrFiJzdK"}
+{"level":"INFO","timestamp":"2025-08-10T13:11:58.571+0300","caller":"managers/user_mngr.go:116","message":"Debug: user password hash from DB","login":"login_and_login_test","password_hash":"$2a$12$hyQBzAO0zBTXRm3vVfgQluCzcg.APQBHghkj5hq83/RhTjrFiJzdK"}
+{"level":"INFO","timestamp":"2025-08-10T13:11:58.798+0300","caller":"test/user_m_test.go:161","message":"PasswordHasher.CheckPasswordHash in RegisterAndLogin","match":true}
+{"level":"INFO","timestamp":"2025-08-10T13:11:58.799+0300","caller":"managers/user_mngr.go:116","message":"Debug: user password hash from DB","login":"login_and_login_test","password_hash":"$2a$12$hyQBzAO0zBTXRm3vVfgQluCzcg.APQBHghkj5hq83/RhTjrFiJzdK"}
+{"level":"INFO","timestamp":"2025-08-10T13:11:59.255+0300","caller":"test/user_m_test.go:219","message":"Password hash after ChangePassword","hash":"$2a$12$WyC940pIP17HDCOgX2WZ4.Fe7d3mgdNhf44hjhuGEdydpHw3Zm.Uu"}
+{"level":"INFO","timestamp":"2025-08-10T13:11:59.256+0300","caller":"managers/user_mngr.go:116","message":"Debug: user password hash from DB","login":"testuser123","password_hash":"$2a$12$WyC940pIP17HDCOgX2WZ4.Fe7d3mgdNhf44hjhuGEdydpHw3Zm.Uu"}
+{"level":"INFO","timestamp":"2025-08-10T13:11:59.480+0300","caller":"managers/user_mngr.go:116","message":"Debug: user password hash from DB","login":"testuser123","password_hash":"$2a$12$WyC940pIP17HDCOgX2WZ4.Fe7d3mgdNhf44hjhuGEdydpHw3Zm.Uu"}
+{"level":"INFO","timestamp":"2025-08-10T13:11:59.712+0300","caller":"test/user_m_test.go:269","message":"All UserManager tests passed successfully"}
+{"level":"INFO","timestamp":"2025-08-17T14:29:07.874+0300","caller":"test/assesment_m_test.go:210","message":"All tests passed successfully"}
