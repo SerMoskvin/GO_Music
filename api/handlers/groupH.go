@@ -47,7 +47,12 @@ func NewStudyGroupHandler(
 
 func (h *StudyGroupHandler) Routes() chi.Router {
 	r := chi.NewRouter()
-	r.Mount("/", h.BaseHandler.Routes())
+	r.Get("/", h.BaseHandler.List)
+	r.Post("/", h.BaseHandler.Create)
+	r.Get("/{id}", h.BaseHandler.Get)
+	r.Put("/{id}", h.BaseHandler.Update)
+	r.Patch("/{id}", h.BaseHandler.PartialUpdate)
+	r.Delete("/{id}", h.BaseHandler.Delete)
 
 	r.Get("/by-program/{program_id}", h.GetByProgram)
 	r.Get("/by-name/{name}", h.GetByName)

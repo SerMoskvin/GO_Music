@@ -48,7 +48,12 @@ func NewEmployeeHandler(
 
 func (h *EmployeeHandler) Routes() chi.Router {
 	r := chi.NewRouter()
-	r.Mount("/", h.BaseHandler.Routes())
+	r.Get("/", h.BaseHandler.List)
+	r.Post("/", h.BaseHandler.Create)
+	r.Get("/{id}", h.BaseHandler.Get)
+	r.Put("/{id}", h.BaseHandler.Update)
+	r.Patch("/{id}", h.BaseHandler.PartialUpdate)
+	r.Delete("/{id}", h.BaseHandler.Delete)
 
 	r.Get("/by-phone/{phone}", h.GetByPhone)
 	r.Get("/by-user/{user_id}", h.GetByUserID)

@@ -46,7 +46,6 @@ func NewStudentAssessmentHandler(
 
 func (h *StudentAssessmentHandler) Routes() chi.Router {
 	r := chi.NewRouter()
-	r.Mount("/", h.BaseHandler.Routes())
 
 	r.Get("/by-student/{student_id}", h.GetByStudent)
 	r.Get("/by-lesson/{lesson_id}", h.GetByLesson)
@@ -54,6 +53,13 @@ func (h *StudentAssessmentHandler) Routes() chi.Router {
 	r.Get("/average-grade/{student_id}", h.GetStudentAverageGrade)
 	r.Get("/by-date-range", h.GetGradesByDateRange)
 	r.Post("/bulk-upsert", h.BulkUpsert)
+
+	r.Get("/", h.BaseHandler.List)
+	r.Post("/", h.BaseHandler.Create)
+	r.Get("/{id}", h.BaseHandler.Get)
+	r.Put("/{id}", h.BaseHandler.Update)
+	r.Patch("/{id}", h.BaseHandler.PartialUpdate)
+	r.Delete("/{id}", h.BaseHandler.Delete)
 
 	return r
 }
@@ -161,8 +167,8 @@ func (h *StudentAssessmentHandler) GetGradesByDateRange(w http.ResponseWriter, r
 	}
 
 	// Преобразуем строки DD.MM.YYYY в time.Time для менеджера
-	startTime := dto.ParseDMY(startDate)
-	endTime := dto.ParseDMY(endDate)
+	startTime := domain.ParseDMY(startDate)
+	endTime := domain.ParseDMY(endDate)
 
 	assessments, err := h.manager.GetGradesByDateRange(r.Context(),
 		startTime.Format("2006-01-02"), // Менеджер ожидает формат YYYY-MM-DD

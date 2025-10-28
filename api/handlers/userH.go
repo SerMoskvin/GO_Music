@@ -48,7 +48,12 @@ func NewUserHandler(
 
 func (h *UserHandler) Routes() chi.Router {
 	r := chi.NewRouter()
-	r.Mount("/", h.BaseHandler.Routes())
+	r.Get("/", h.BaseHandler.List)
+	r.Post("/", h.BaseHandler.Create)
+	r.Get("/{id}", h.BaseHandler.Get)
+	r.Put("/{id}", h.BaseHandler.Update)
+	r.Patch("/{id}", h.BaseHandler.PartialUpdate)
+	r.Delete("/{id}", h.BaseHandler.Delete)
 
 	r.Post("/register", h.Register)
 	r.Post("/login", h.Login)

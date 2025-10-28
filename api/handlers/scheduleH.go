@@ -50,7 +50,12 @@ func NewScheduleHandler(
 // Routes возвращает маршруты для расписания
 func (h *ScheduleHandler) Routes() chi.Router {
 	r := chi.NewRouter()
-	r.Mount("/", h.BaseHandler.Routes())
+	r.Get("/", h.BaseHandler.List)
+	r.Post("/", h.BaseHandler.Create)
+	r.Get("/{id}", h.BaseHandler.Get)
+	r.Put("/{id}", h.BaseHandler.Update)
+	r.Patch("/{id}", h.BaseHandler.PartialUpdate)
+	r.Delete("/{id}", h.BaseHandler.Delete)
 
 	r.Get("/by-lesson/{lesson_id}", h.GetByLesson)
 	r.Get("/by-day/{day_week}", h.GetByDay)
